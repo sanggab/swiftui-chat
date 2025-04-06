@@ -31,8 +31,12 @@
 			membershipExceptions = (
 				Model/Model.swift,
 				Utils/Keyboard.swift,
-				View/ChatCoordinator.swift,
-				View/ChatView.swift,
+				"View/CollectionView/ChatCollectionView + Animation.swift",
+				"View/CollectionView/ChatCollectionView + Helper.swift",
+				"View/CollectionView/ChatCollectionView + Update.swift",
+				View/CollectionView/ChatCollectionView.swift,
+				View/Coordinator/ChatCoordinator.swift,
+				View/Main/ChatView.swift,
 			);
 			target = 4B9BB8822DA26C5C00F17B88 /* GabChat */;
 		};
