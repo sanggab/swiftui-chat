@@ -36,6 +36,7 @@ extension ChatCollectionView {
 // MARK: - textInput
 extension ChatCollectionView {
     /// textInput State일 떄 처리하는 기능 모음
+    @MainActor
     func textInputAction(_ uiView: UICollectionView) {
         if self.keyboardOption.state == .willHide || self.keyboardOption.state == .didHide {
             DispatchQueue.main.async {
@@ -63,6 +64,7 @@ extension ChatCollectionView {
         }
     }
     /// 키보드 높이가 달라졌을 때 처리하는 기능
+    @MainActor
     func isConditionWithDifferenceKeyboardHeight(_ uiView: UICollectionView) {
         let currentOffsetY: CGFloat = uiView.contentOffset.y
         let viewHeight: CGFloat = uiView.frame.height
@@ -79,6 +81,7 @@ extension ChatCollectionView {
         }
     }
     /// 인풋창 높이가 달라졌을 때 처리하는 기능
+    @MainActor
     func isConditionWithDifferenceInputHeight(_ uiView: UICollectionView) {
         let currentOffsetY: CGFloat = uiView.contentOffset.y
         let differenceHeight: CGFloat = self.inputHeight - self.previousInputHeight
@@ -91,6 +94,7 @@ extension ChatCollectionView {
 // MARK: - keyboard
 extension ChatCollectionView {
     /// Keyboard의 상태 변화에 따른 UICollectionView contentOffset 조절하는 기능
+    @MainActor
     func controlOffsetWithKeyboard(_ uiView: UICollectionView) {
         switch self.keyboardOption.state {
         case .willShow:
@@ -112,6 +116,7 @@ extension ChatCollectionView {
     /// Keyboard가 올라올 때, UICollectionView의 contentOffset.y을 조절해줍니다
     ///
     /// - Note: UICollectionView의 contentOffset.y의 위치에 따라 애니메이션이 다를 수 있습니다.
+    @MainActor
     private func isConditionWithKeyboardShow(_ uiView: UICollectionView) {
         let moveOffsetY: CGFloat = self.computeMoveOffsetY(uiView)
         
@@ -127,6 +132,7 @@ extension ChatCollectionView {
     /// Keyboard가 내려갈 때 처리를 하는 method
     ///
     /// Keyboard가 내려갈 때, UICollectionView의 contentOffset.y을 조절해줍니다
+    @MainActor
     private func isConditionWithKeyboardHide(_ uiView: UICollectionView) {
         let moveOffsetY: CGFloat = self.computeMoveOffsetY(uiView)
         
@@ -136,50 +142,5 @@ extension ChatCollectionView {
             self.inputUpdateState = .waiting
             self.keyboardOption.state = .none
         }
-    }
-}
-
-extension ChatCollectionView {
-    func reloadAction(_ uiView: UICollectionView, context: Context) {
-        print("\(#function)")
-        context.coordinator.appendItem(item: self.chatList)
-        DispatchQueue.main.async {
-            self.inputUpdateState = .waiting
-        }
-    }
-}
-
-extension ChatCollectionView {
-    func reconfigureAction(_ uiView: UICollectionView, context: Context) {
-        print("\(#function)")
-        context.coordinator.reconfigureItems()
-//        DispatchQueue.main.async {
-//            context.coordinator.reconfigureItems()
-//            self.inputUpdateState = .waiting
-//        }
-    }
-}
-
-extension ChatCollectionView {
-    func refreshAction(_ uiView: UICollectionView, context: Context) {
-        print("\(#function)")
-        context.coordinator.reconfigureItems()
-        DispatchQueue.main.async {
-            self.inputUpdateState = .waiting
-        }
-    }
-}
-
-extension ChatCollectionView {
-    func testAction(_ uiView: UICollectionView, context: Context) {
-        print("상갑 logEvent \(#function)")
-        context.coordinator.newItem(item: self.chatList)
-        uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: true)
-    }
-}
-
-extension ChatCollectionView {
-    func test2Action(_ uiView: UICollectionView, context: Context) {
-        print("상갑 logEvent \(#function)")
     }
 }

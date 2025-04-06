@@ -30,6 +30,8 @@ struct GabChatDemoReducer {
         case updateChatList([ChatModel])
         case appendRandomChat
         
+        case deleteChat(ChatModel)
+        
         case updateDiffableUpdateState(DiffableUpdateState)
         
         case updateText(String)
@@ -42,6 +44,7 @@ struct GabChatDemoReducer {
             switch action {
             case .onAppear:
                 state.chatList = ChatModel.makeEmptyData()
+                state.diffableUpdateState = .onAppear
                 return .none
                 
             case .updateChatList(let list):
@@ -67,6 +70,16 @@ struct GabChatDemoReducer {
                 let newChatModel: ChatModel = .init(memNo: 2805, chatType: .img, sendType: .send, imgUrl: imgUrl, msgNo: newMsgNo)
                 
                 state.chatList.append(newChatModel)
+                
+                state.diffableUpdateState = .appendItem(true)
+                return .none
+                
+            case .deleteChat(let chatModel):
+                if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
+                    state.chatList[matchIndex].chatType = .delete
+                    print("\(#function) state.chatList[matchIndex].chatType: \(state.chatList[matchIndex].chatType)")
+                    state.diffableUpdateState = .reconfigure(false)
+                }
                 
                 return .none
                 

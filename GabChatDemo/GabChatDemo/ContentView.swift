@@ -27,6 +27,9 @@ struct ContentView: View {
                 Rectangle()
                     .fill(.orange)
                     .frame(height: 50)
+                    .overlay {
+                        Text("DiffableUpdateState onAppear")
+                    }
                     .onTapGesture {
                         self.store.send(.onAppear)
                     }
@@ -34,9 +37,20 @@ struct ContentView: View {
                 Rectangle()
                     .fill(.blue)
                     .frame(height: 50)
+                    .overlay {
+                        Text("DiffableUpdateState appendItem")
+                    }
                     .onTapGesture {
                         self.store.send(.appendRandomChat)
                     }
+                
+                Rectangle()
+                    .fill(.red)
+                    .frame(height: 50)
+                    .overlay {
+                        Text("DiffableUpdateState reconfigure")
+                    }
+
             }
             
             ChatView(chatList: $store.chatList.sending(\.updateChatList),
@@ -45,8 +59,14 @@ struct ContentView: View {
                     switch current.chatType {
                     case .text:
                         TextCell(text: current.text)
+                            .onTapGesture {
+                                self.store.send(.deleteChat(current))
+                            }
                     case .img:
                         ImageCell(urlString: current.imgUrl ?? "")
+                            .onTapGesture {
+                                self.store.send(.deleteChat(current))
+                            }
                     case .delete:
                         DeletedCell()
                     }
