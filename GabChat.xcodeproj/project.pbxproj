@@ -29,8 +29,10 @@
 		4B9BB8A02DA26CB700F17B88 /* Exceptions for "Sources" folder in "GabChat" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				ChatView.swift,
+				Model/Model.swift,
 				Utils/Keyboard.swift,
+				View/ChatCoordinator.swift,
+				View/ChatView.swift,
 			);
 			target = 4B9BB8822DA26C5C00F17B88 /* GabChat */;
 		};
