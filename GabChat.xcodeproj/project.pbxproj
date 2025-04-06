@@ -30,6 +30,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				ChatView.swift,
+				Utils/Keyboard.swift,
 			);
 			target = 4B9BB8822DA26C5C00F17B88 /* GabChat */;
 		};
