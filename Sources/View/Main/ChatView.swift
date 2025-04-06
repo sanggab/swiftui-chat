@@ -21,9 +21,11 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: Hashable>:
     @State private var inputHeight: CGFloat = 0
     @State private var insetBottom: CGFloat = 0
     
+    @State private var oldChatList: [ChatModel] = []
+    
     public init(chatList: Binding<[ChatModel]>,
-                itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView,
-                inputBuilderClosure: @escaping () -> InputView) {
+                @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView,
+                @ViewBuilder inputBuilderClosure: @escaping () -> InputView) {
         self._chatList = chatList
         self.itemBuilderClosure = itemBuilderClosure
         self.inputBuilderClosure = inputBuilderClosure
@@ -59,6 +61,9 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: Hashable>:
         .keyboardWillHide { option in
             self.updateState = .keyboard
             self.keyboardOption = option
+        }
+        .onChange(of: chatList) { newValue in
+            
         }
     }
 }

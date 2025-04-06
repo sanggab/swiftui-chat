@@ -7,11 +7,17 @@
 
 import SwiftUI
 
+import ComposableArchitecture
+
 @main
 struct GabChatDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            let store: StoreOf<GabChatDemoReducer> = .init(initialState: GabChatDemoReducer.State()) {
+                GabChatDemoReducer()
+            }
+            
+            ContentView(store: store)
         }
     }
 }

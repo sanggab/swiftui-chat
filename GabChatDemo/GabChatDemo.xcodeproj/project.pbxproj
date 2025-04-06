@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4B9BBA542DA281E100F17B88 /* GabChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9BBA532DA281E100F17B88 /* GabChat.framework */; };
+		4B9BBA552DA281E100F17B88 /* GabChat.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9BBA532DA281E100F17B88 /* GabChat.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4B9BBA592DA281FB00F17B88 /* GabTextView in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BBA582DA281FB00F17B88 /* GabTextView */; };
+		4B9BBA5C2DA2824800F17B88 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BBA5B2DA2824800F17B88 /* ComposableArchitecture */; };
+		4B9BBABF2DA289F400F17B88 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BBABE2DA289F400F17B88 /* Kingfisher */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		4B9BB8B82DA26D1000F17B88 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -23,10 +31,25 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4B9BBA562DA281E100F17B88 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4B9BBA552DA281E100F17B88 /* GabChat.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		4B9BB8AA2DA26D0F00F17B88 /* GabChatDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GabChatDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B9BB8B72DA26D1000F17B88 /* GabChatDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GabChatDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B9BB8C12DA26D1000F17B88 /* GabChatDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GabChatDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B9BBA532DA281E100F17B88 /* GabChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GabChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +75,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B9BBABF2DA289F400F17B88 /* Kingfisher in Frameworks */,
+				4B9BBA542DA281E100F17B88 /* GabChat.framework in Frameworks */,
+				4B9BBA592DA281FB00F17B88 /* GabTextView in Frameworks */,
+				4B9BBA5C2DA2824800F17B88 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +105,7 @@
 				4B9BB8AC2DA26D0F00F17B88 /* GabChatDemo */,
 				4B9BB8BA2DA26D1000F17B88 /* GabChatDemoTests */,
 				4B9BB8C42DA26D1000F17B88 /* GabChatDemoUITests */,
+				4B9BBA522DA281E100F17B88 /* Frameworks */,
 				4B9BB8AB2DA26D0F00F17B88 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -92,6 +120,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		4B9BBA522DA281E100F17B88 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4B9BBA532DA281E100F17B88 /* GabChat.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -102,6 +138,7 @@
 				4B9BB8A62DA26D0F00F17B88 /* Sources */,
 				4B9BB8A72DA26D0F00F17B88 /* Frameworks */,
 				4B9BB8A82DA26D0F00F17B88 /* Resources */,
+				4B9BBA562DA281E100F17B88 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -112,6 +149,9 @@
 			);
 			name = GabChatDemo;
 			packageProductDependencies = (
+				4B9BBA582DA281FB00F17B88 /* GabTextView */,
+				4B9BBA5B2DA2824800F17B88 /* ComposableArchitecture */,
+				4B9BBABE2DA289F400F17B88 /* Kingfisher */,
 			);
 			productName = GabChatDemo;
 			productReference = 4B9BB8AA2DA26D0F00F17B88 /* GabChatDemo.app */;
@@ -195,6 +235,11 @@
 			);
 			mainGroup = 4B9BB8A12DA26D0F00F17B88;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4B9BBA572DA281FB00F17B88 /* XCRemoteSwiftPackageReference "swiftui-textView" */,
+				4B9BBA5A2DA2824800F17B88 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				4B9BBABD2DA289F400F17B88 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4B9BB8AB2DA26D0F00F17B88 /* Products */;
 			projectDirPath = "";
@@ -562,6 +607,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4B9BBA572DA281FB00F17B88 /* XCRemoteSwiftPackageReference "swiftui-textView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sanggab/swiftui-textView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.0;
+			};
+		};
+		4B9BBA5A2DA2824800F17B88 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.19.0;
+			};
+		};
+		4B9BBABD2DA289F400F17B88 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.3.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4B9BBA582DA281FB00F17B88 /* GabTextView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B9BBA572DA281FB00F17B88 /* XCRemoteSwiftPackageReference "swiftui-textView" */;
+			productName = GabTextView;
+		};
+		4B9BBA5B2DA2824800F17B88 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B9BBA5A2DA2824800F17B88 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		4B9BBABE2DA289F400F17B88 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B9BBABD2DA289F400F17B88 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4B9BB8A22DA26D0F00F17B88 /* Project object */;
 }

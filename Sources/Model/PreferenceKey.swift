@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct InputHeightKey: PreferenceKey {
-    public static var defaultValue: CGFloat = .zero
+struct InputHeightKey: @preconcurrency PreferenceKey {
+    @MainActor public static var defaultValue: CGFloat = .zero
     
     public static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
         value += nextValue()

@@ -41,7 +41,6 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
         
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "chatcell")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .systemMint
         collectionView.delegate = context.coordinator
         
         context.coordinator.setDataSource(view: collectionView)

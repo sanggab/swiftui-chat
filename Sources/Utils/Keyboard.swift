@@ -5,6 +5,7 @@
 //  Created by 심상갑 on 4/6/25.
 //
 
+import Foundation
 import SwiftUI
 import Combine
 
@@ -25,7 +26,7 @@ public struct KeyboardOption: Hashable {
     public let duration: TimeInterval
     public var state: KeyboardState
     
-    public static let `default`: KeyboardOption = .init(size: .zero,
+    @MainActor public static let `default`: KeyboardOption = .init(size: .zero,
                                                         curve: .zero,
                                                         duration: .zero,
                                                         state: .none)
