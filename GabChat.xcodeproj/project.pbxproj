@@ -30,6 +30,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Model/Model.swift,
+				Model/PreferenceKey.swift,
 				Utils/Keyboard.swift,
 				"View/CollectionView/ChatCollectionView + Animation.swift",
 				"View/CollectionView/ChatCollectionView + Helper.swift",

@@ -20,19 +20,20 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
     @State var previousKeyboardHeight: CGFloat = 0
     @Binding var chatList: [ChatModel]
     
-    public init(@ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView,
-         keyboardOption: Binding<KeyboardOption>,
-         updateState: Binding<UpdateState>,
-         inputHeight: CGFloat,
-                safeAreaInsetBottom: CGFloat,
-                chatList: Binding<[ChatModel]>) {
-        self.itemBuilderClosure = itemBuilderClosure
-        self._updateState = updateState
-        self._keyboardOption = keyboardOption
-        self.inputHeight = inputHeight
-        self.safeAreaInsetBottom = safeAreaInsetBottom
-        self._chatList = chatList
-    }
+    public init(
+        chatList: Binding<[ChatModel]>,
+        keyboardOption: Binding<KeyboardOption>,
+        updateState: Binding<UpdateState>,
+        inputHeight: CGFloat,
+        safeAreaInsetBottom: CGFloat,
+        @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView,) {
+            self._updateState = updateState
+            self._keyboardOption = keyboardOption
+            self.inputHeight = inputHeight
+            self.safeAreaInsetBottom = safeAreaInsetBottom
+            self._chatList = chatList
+            self.itemBuilderClosure = itemBuilderClosure
+        }
     
     public func makeUIView(context: Context) -> UICollectionView {
         let collectionView: UICollectionView = .init(frame: .zero,
@@ -43,7 +44,6 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
         collectionView.backgroundColor = .systemMint
         collectionView.delegate = context.coordinator
         
-        print("상갑 logEvent \(#function)")
         context.coordinator.setDataSource(view: collectionView)
         context.coordinator.setData(item: self.chatList)
         
@@ -51,7 +51,6 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
     }
     
     public func updateUIView(_ uiView: UICollectionView, context: Context) {
-        print("\(#function) updateState: \(self.updateState)")
         self.conditionUpdateType(uiView, context: context)
         self.dataInput(uiView, context: context)
     }
@@ -88,8 +87,5 @@ extension ChatCollectionView {
     func dataInput(_ uiView: UICollectionView, context: Context) {
         let height: CGFloat = uiView.frame.height
         let contentSize: CGFloat = uiView.contentSize.height
-        
-        print("상갑 logEvent \(#function) height: \(height)")
-        print("상갑 logEvent \(#function) contentSize: \(contentSize)")
     }
 }
