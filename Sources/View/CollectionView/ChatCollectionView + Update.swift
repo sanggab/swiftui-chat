@@ -9,16 +9,17 @@ import SwiftUI
 
 // MARK: - onAppear
 extension ChatCollectionView {
+    @available(*, deprecated, message: "잠정 폐지")
     /// onAppear State일 때 처리하는 기능 모음
     func onAppearAction(_ uiView: UICollectionView, context: Context) {
-        let size: CGSize = uiView.frame.size
-        let contentSize: CGSize = uiView.contentSize
-        
-        if size.height != .zero && contentSize.height != .zero && self.updateState == .onAppear {
-            DispatchQueue.main.async {
-                self.updateState = .waiting
-            }
-        }
+//        let size: CGSize = uiView.frame.size
+//        let contentSize: CGSize = uiView.contentSize
+//        
+//        if size.height != .zero && contentSize.height != .zero && self.inputUpdateState == .onAppear {
+//            DispatchQueue.main.async {
+//                self.inputUpdateState = .waiting
+//            }
+//        }
     }
 }
 // MARK: - waiting
@@ -27,7 +28,7 @@ extension ChatCollectionView {
     func waitingAction() {
 //        if self.keyboardOption.state != .none {
 //            DispatchQueue.main.async {
-//                self.updateState = .keyboard
+//                self.inputUpdateState = .keyboard
 //            }
 //        }
     }
@@ -38,7 +39,7 @@ extension ChatCollectionView {
     func textInputAction(_ uiView: UICollectionView) {
         if self.keyboardOption.state == .willHide || self.keyboardOption.state == .didHide {
             DispatchQueue.main.async {
-                self.updateState = .keyboard
+                self.inputUpdateState = .keyboard
             }
         }
         
@@ -118,7 +119,7 @@ extension ChatCollectionView {
         self.isNearBottom(uiView) ? self.executeSetContentOffset(uiView, offset: moveOffsetY) : self.executeAnimator(uiView, offsetY: moveOffsetY)
         
         DispatchQueue.main.async {
-            self.updateState = .textInput
+            self.inputUpdateState = .textInput
             self.keyboardOption.state = .none
         }
     }
@@ -132,7 +133,7 @@ extension ChatCollectionView {
         self.executeAnimator(uiView, offsetY: moveOffsetY)
         
         DispatchQueue.main.async {
-            self.updateState = .waiting
+            self.inputUpdateState = .waiting
             self.keyboardOption.state = .none
         }
     }
@@ -143,7 +144,7 @@ extension ChatCollectionView {
         print("\(#function)")
         context.coordinator.appendItem(item: self.chatList)
         DispatchQueue.main.async {
-            self.updateState = .waiting
+            self.inputUpdateState = .waiting
         }
     }
 }
@@ -154,7 +155,7 @@ extension ChatCollectionView {
         context.coordinator.reconfigureItems()
 //        DispatchQueue.main.async {
 //            context.coordinator.reconfigureItems()
-//            self.updateState = .waiting
+//            self.inputUpdateState = .waiting
 //        }
     }
 }
@@ -164,7 +165,7 @@ extension ChatCollectionView {
         print("\(#function)")
         context.coordinator.reconfigureItems()
         DispatchQueue.main.async {
-            self.updateState = .waiting
+            self.inputUpdateState = .waiting
         }
     }
 }

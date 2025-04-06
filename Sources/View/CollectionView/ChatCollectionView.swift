@@ -15,20 +15,22 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
     let inputHeight: CGFloat
     let safeAreaInsetBottom: CGFloat
     
-    @Binding var updateState: UpdateState
+    @State var inputUpdateState: InputUpdateState = .waiting
     @State var previousInputHeight: CGFloat = 0
     @State var previousKeyboardHeight: CGFloat = 0
+    
+    @Binding var diffableUpdateState: DiffableUpdateState
     @Binding var chatList: [ChatModel]
     
     public init(
         chatList: Binding<[ChatModel]>,
         keyboardOption: Binding<KeyboardOption>,
-        updateState: Binding<UpdateState>,
+        diffableUpdateState: Binding<DiffableUpdateState>,
         inputHeight: CGFloat,
         safeAreaInsetBottom: CGFloat,
         @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView,) {
-            self._updateState = updateState
             self._keyboardOption = keyboardOption
+            self._diffableUpdateState = diffableUpdateState
             self.inputHeight = inputHeight
             self.safeAreaInsetBottom = safeAreaInsetBottom
             self._chatList = chatList
@@ -50,8 +52,8 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
     }
     
     public func updateUIView(_ uiView: UICollectionView, context: Context) {
-        self.conditionUpdateType(uiView, context: context)
-        self.dataInput(uiView, context: context)
+        self.conditionInputUpdateState(uiView, context: context)
+        self.conditionDiffableUpdateState(uiView, context: context)
     }
     
     public func makeCoordinator() -> ChatCoordinator<ContentView, ChatModel> {
@@ -60,31 +62,20 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
 }
 
 extension ChatCollectionView {
-    func conditionUpdateType(_ uiView: UICollectionView, context: Context) {
-        switch self.updateState {
-        case .onAppear:
-            self.onAppearAction(uiView, context: context)
+    func conditionInputUpdateState(_ uiView: UICollectionView, context: Context) {
+        switch self.inputUpdateState {
         case .waiting:
             self.waitingAction()
         case .textInput:
             self.textInputAction(uiView)
         case .keyboard:
             self.controlOffsetWithKeyboard(uiView)
-        case .reconfigure:
-            self.reconfigureAction(uiView, context: context)
-        case .reload:
-            self.reloadAction(uiView, context: context)
-        case .refresh:
-            context.coordinator.reconfigureItems()
-        case .test:
-            self.testAction(uiView, context: context)
-        default:
-            break
         }
     }
-    
-    func dataInput(_ uiView: UICollectionView, context: Context) {
-        let height: CGFloat = uiView.frame.height
-        let contentSize: CGFloat = uiView.contentSize.height
+}
+
+extension ChatCollectionView {
+    func conditionDiffableUpdateState(_ uiView: UICollectionView, context: Context) {
+        
     }
 }

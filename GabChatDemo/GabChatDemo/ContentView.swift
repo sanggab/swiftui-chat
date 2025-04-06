@@ -23,14 +23,33 @@ struct ContentView: View {
     
     var body: some View {
         WithPerceptionTracking {
-            ChatView(chatList: $store.chatList.sending(\.updateChatList)) { (before: ChatModel?, current: ChatModel) in
-                switch current.chatType {
-                case .text:
-                    TextCell(text: current.text)
-                case .img:
-                    ImageCell(urlString: current.imgUrl ?? "")
-                case .delete:
-                    DeletedCell()
+            HStack {
+                Rectangle()
+                    .fill(.orange)
+                    .frame(height: 50)
+                    .onTapGesture {
+                        self.store.send(.onAppear)
+                    }
+                
+                Rectangle()
+                    .fill(.blue)
+                    .frame(height: 50)
+                    .onTapGesture {
+                        self.store.send(.appendRandomChat)
+                    }
+            }
+            
+            ChatView(chatList: $store.chatList.sending(\.updateChatList),
+                     diffableUpdateState: $store.diffableUpdateState.sending(\.updateDiffableUpdateState)) { (before: ChatModel?, current: ChatModel) in
+                WithPerceptionTracking {
+                    switch current.chatType {
+                    case .text:
+                        TextCell(text: current.text)
+                    case .img:
+                        ImageCell(urlString: current.imgUrl ?? "")
+                    case .delete:
+                        DeletedCell()
+                    }
                 }
             } inputBuilderClosure: {
                 WithPerceptionTracking {

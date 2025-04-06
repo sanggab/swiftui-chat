@@ -14,19 +14,19 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: Hashable>:
     @ViewBuilder private let inputBuilderClosure: () -> InputView
     
     @Binding public var chatList: [ChatModel]
+    @Binding public var diffableUpdateState: DiffableUpdateState
     
     @State private var keyboardOption: KeyboardOption = .default
-    @State private var updateState: UpdateState = .waiting
     
     @State private var inputHeight: CGFloat = 0
     @State private var insetBottom: CGFloat = 0
     
-    @State private var oldChatList: [ChatModel] = []
-    
     public init(chatList: Binding<[ChatModel]>,
+                diffableUpdateState: Binding<DiffableUpdateState>,
                 @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView,
                 @ViewBuilder inputBuilderClosure: @escaping () -> InputView) {
         self._chatList = chatList
+        self._diffableUpdateState = diffableUpdateState
         self.itemBuilderClosure = itemBuilderClosure
         self.inputBuilderClosure = inputBuilderClosure
     }
@@ -35,7 +35,7 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: Hashable>:
         VStack(spacing: 0) {
             ChatCollectionView(chatList: self.$chatList,
                                keyboardOption: self.$keyboardOption,
-                               updateState: self.$updateState,
+                               diffableUpdateState: self.$diffableUpdateState,
                                inputHeight: self.inputHeight,
                                safeAreaInsetBottom: self.insetBottom,
                                itemBuilderClosure: self.itemBuilderClosure)
@@ -55,15 +55,10 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: Hashable>:
         }
         .onPreferenceChange(InputHeightKey.self) { self.inputHeight = $0 }
         .keyboardWillShow { option in
-            self.updateState = .keyboard
             self.keyboardOption = option
         }
         .keyboardWillHide { option in
-            self.updateState = .keyboard
             self.keyboardOption = option
-        }
-        .onChange(of: chatList) { newValue in
-            
         }
     }
 }
