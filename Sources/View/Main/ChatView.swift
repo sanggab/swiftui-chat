@@ -13,7 +13,7 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: Hashable>:
     
     @ViewBuilder private let inputBuilderClosure: () -> InputView
     
-    @Binding public var chatList: [ChatModel]
+    let chatList: [ChatModel]
     @Binding public var diffableUpdateState: DiffableUpdateState
     
     @State private var keyboardOption: KeyboardOption = .default
@@ -21,11 +21,11 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: Hashable>:
     @State private var inputHeight: CGFloat = 0
     @State private var insetBottom: CGFloat = 0
     
-    public init(chatList: Binding<[ChatModel]>,
+    public init(chatList: [ChatModel],
                 diffableUpdateState: Binding<DiffableUpdateState>,
                 @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView,
                 @ViewBuilder inputBuilderClosure: @escaping () -> InputView) {
-        self._chatList = chatList
+        self.chatList = chatList
         self._diffableUpdateState = diffableUpdateState
         self.itemBuilderClosure = itemBuilderClosure
         self.inputBuilderClosure = inputBuilderClosure
@@ -33,7 +33,7 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: Hashable>:
     
     public var body: some View {
         VStack(spacing: 0) {
-            ChatCollectionView(chatList: self.$chatList,
+            ChatCollectionView(chatList: self.chatList,
                                keyboardOption: self.$keyboardOption,
                                diffableUpdateState: self.$diffableUpdateState,
                                inputHeight: self.inputHeight,

@@ -34,8 +34,10 @@ public enum DiffableUpdateState: Equatable {
     /// > Note: 만약 추가한 채팅이 기존 채팅하고 비교할 때, 새로운 채팅 데이터가 존재하지 않으면
     /// 아무런 작동을 수행하지 않고 스크롤을 수행하지 않습니다.
     case appendItem(Bool)
-    /// Cell 리로드
+    /// CollectionView 전체 리로드
     case reload
+    /// Cell Item 리로드
+    case reloadItem
     /// Cell 재구성
     ///
     /// Bool값은 true일 경우 scrollToBottom 수행

@@ -32,6 +32,8 @@ struct GabChatDemoReducer {
         
         case deleteChat(ChatModel)
         
+        case reloadItem
+        
         case updateDiffableUpdateState(DiffableUpdateState)
         
         case updateText(String)
@@ -81,6 +83,11 @@ struct GabChatDemoReducer {
                     state.diffableUpdateState = .reconfigure(false)
                 }
                 
+                return .none
+                
+            case .reloadItem:
+                state.chatList[state.chatList.count - 1].chatType = .delete
+                state.diffableUpdateState = .reloadItem
                 return .none
                 
             case .updateDiffableUpdateState(let diffableUpdateState):

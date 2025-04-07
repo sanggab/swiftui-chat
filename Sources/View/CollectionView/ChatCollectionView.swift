@@ -20,10 +20,12 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
     @State var previousKeyboardHeight: CGFloat = 0
     
     @Binding var diffableUpdateState: DiffableUpdateState
-    @Binding var chatList: [ChatModel]
+    let chatList: [ChatModel]
+    
+    @State private var previousChatList: [ChatModel] = []
     
     public init(
-        chatList: Binding<[ChatModel]>,
+        chatList: [ChatModel],
         keyboardOption: Binding<KeyboardOption>,
         diffableUpdateState: Binding<DiffableUpdateState>,
         inputHeight: CGFloat,
@@ -33,7 +35,7 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
             self._diffableUpdateState = diffableUpdateState
             self.inputHeight = inputHeight
             self.safeAreaInsetBottom = safeAreaInsetBottom
-            self._chatList = chatList
+            self.chatList = chatList
             self.itemBuilderClosure = itemBuilderClosure
         }
     
@@ -82,7 +84,9 @@ extension ChatCollectionView {
 extension ChatCollectionView {
     @MainActor
     func conditionDiffableUpdateState(_ uiView: UICollectionView, context: Context) {
-        
+        print("\(#function) self.chatList: \(self.chatList)")
+        print("\(#function) previousChatList: \(previousChatList)")
+        print("same : \(self.chatList == self.previousChatList)")
         switch self.diffableUpdateState {
         case .onAppear:
             self.diffableOnAppearAction(uiView, context: context)
@@ -92,9 +96,14 @@ extension ChatCollectionView {
             self.appendItem(uiView, context: context, isScroll: isScroll)
         case .reload:
             self.reloadAction(uiView, context: context)
+        case .reloadItem:
+            self.reloadItemAction(uiView, context: context)
         case .reconfigure(let isScroll):
             self.reconfigure(uiView, context: context, isScroll: isScroll)
-            
+        }
+        
+        DispatchQueue.main.async {
+            self.previousChatList = self.chatList
         }
     }
 }
@@ -124,6 +133,12 @@ extension ChatCollectionView {
     func reloadAction(_ uiView: UICollectionView, context: Context) {
         Task {
 //            await context.coordinator.reconfigure(item: self.chatList)
+        }
+    }
+    
+    func reloadItemAction(_ uiView: UICollectionView, context: Context) {
+        Task {
+            await context.coordinator.reloadItem(item: self.previousChatList)
         }
     }
     

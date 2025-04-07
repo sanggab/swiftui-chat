@@ -48,12 +48,15 @@ struct ContentView: View {
                     .fill(.red)
                     .frame(height: 50)
                     .overlay {
-                        Text("DiffableUpdateState reconfigure")
+                        Text("DiffableUpdateState reloadItem")
+                    }
+                    .onTapGesture {
+                        self.store.send(.reloadItem)
                     }
 
             }
             
-            ChatView(chatList: $store.chatList.sending(\.updateChatList),
+            ChatView(chatList: store.chatList,
                      diffableUpdateState: $store.diffableUpdateState.sending(\.updateDiffableUpdateState)) { (before: ChatModel?, current: ChatModel) in
                 WithPerceptionTracking {
                     switch current.chatType {
