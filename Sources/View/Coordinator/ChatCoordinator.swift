@@ -67,6 +67,10 @@ public final class ChatCoordinator<ContentView: View, ChatModel: Hashable>: NSOb
         return self.dataSource.itemIdentifier(for: index)
     }
     
+    public func check() {
+        print("\(#function) self.dataSource.snapshot().itemIdentifiers: \(self.dataSource.snapshot().itemIdentifiers)")
+    }
+    
 //    public func setData(item: [ChatModel]) {
 //        var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = .init()
 //        
@@ -159,35 +163,28 @@ extension ChatCoordinator {
 }
 
 extension ChatCoordinator {
+    
+}
+
+extension ChatCoordinator {
+    /// reconfigure가 필요 없는 이유
+    ///
+    /// 이상하게 먼지 모르겠는데, ChatModel의 프로퍼티중 하나를 변경한 경우에 snapShot에 새로 갱신을 안해줘도 알아서 갱신되버린다.
+    /// 그래서 필요 없는 기능이 되버렸다
+    /// 그래서 만약 삭제 기능을 사용할 경우, reload만 해주면 된다.
+    @available(*, deprecated, message: "documentation 참조")
     public func reconfigure(item: [ChatModel]) async {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
-        snapShot.deleteItems(snapShot.itemIdentifiers)
+        let currentItem: [ChatModel] = snapShot.itemIdentifiers
         
-        snapShot.appendItems(item)
+        let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: consume item)
+        
+        print("\(#function) remainItem: \(remainItem)")
+        
+        snapShot.reconfigureItems(remainItem)
         
         await self.dataSource.apply(snapShot)
-        
-//        item.forEach {
-//            print("\(#function) item: \($0)")
-//            
-//        }
-//        
-//        print("\(#function) same: \(item == snapShot.itemIdentifiers)")
-//        
-//        snapShot.itemIdentifiers.forEach {
-//            print("itemIdentifiers \($0)")
-//        }
-        
-//        let currentItem: [ChatModel] = snapShot.itemIdentifiers
-//        
-//        let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: consume item)
-//        
-//        print("\(#function) remainItem: \(remainItem)")
-//        
-//        snapShot.reconfigureItems(remainItem)
-//        
-//        await self.dataSource.apply(snapShot)
     }
 }
 

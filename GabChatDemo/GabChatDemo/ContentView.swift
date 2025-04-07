@@ -64,6 +64,7 @@ struct ContentView: View {
                             }
                     case .img:
                         ImageCell(urlString: current.imgUrl ?? "")
+                            .clipped()
                             .onTapGesture {
                                 self.store.send(.deleteChat(current))
                             }

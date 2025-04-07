@@ -54,6 +54,8 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
     public func updateUIView(_ uiView: UICollectionView, context: Context) {
         print("\(#function) inputUpdateState: \(self.inputUpdateState)")
         print("\(#function) diffableUpdateState: \(self.diffableUpdateState)")
+        print("\(#function) chatList: \(self.chatList)")
+        print("\(#function) diffableUpdateState: \(context.coordinator.check())")
         self.conditionInputUpdateState(uiView, context: context)
         self.conditionDiffableUpdateState(uiView, context: context)
     }
