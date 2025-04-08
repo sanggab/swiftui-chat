@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIViewRepresentable {
+public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UIViewRepresentable {
     
     @ViewBuilder let itemBuilderClosure: (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView
     
@@ -22,15 +22,13 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
     @Binding var diffableUpdateState: DiffableUpdateState
     let chatList: [ChatModel]
     
-    @State private var previousChatList: [ChatModel] = []
-    
     public init(
         chatList: [ChatModel],
         keyboardOption: Binding<KeyboardOption>,
         diffableUpdateState: Binding<DiffableUpdateState>,
         inputHeight: CGFloat,
         safeAreaInsetBottom: CGFloat,
-        @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView,) {
+        @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView) {
             self._keyboardOption = keyboardOption
             self._diffableUpdateState = diffableUpdateState
             self.inputHeight = inputHeight
@@ -54,10 +52,10 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
     }
     
     public func updateUIView(_ uiView: UICollectionView, context: Context) {
-        print("\(#function) inputUpdateState: \(self.inputUpdateState)")
-        print("\(#function) diffableUpdateState: \(self.diffableUpdateState)")
-        print("\(#function) chatList: \(self.chatList)")
-        print("\(#function) diffableUpdateState: \(context.coordinator.check())")
+//        print("\(#function) inputUpdateState: \(self.inputUpdateState)")
+//        print("\(#function) diffableUpdateState: \(self.diffableUpdateState)")
+//        print("\(#function) chatList: \(self.chatList)")
+//        print("\(#function) diffableUpdateState: \(context.coordinator.check())")
         self.conditionInputUpdateState(uiView, context: context)
         self.conditionDiffableUpdateState(uiView, context: context)
     }
@@ -84,9 +82,9 @@ extension ChatCollectionView {
 extension ChatCollectionView {
     @MainActor
     func conditionDiffableUpdateState(_ uiView: UICollectionView, context: Context) {
-        print("\(#function) self.chatList: \(self.chatList)")
-        print("\(#function) previousChatList: \(previousChatList)")
-        print("same : \(self.chatList == self.previousChatList)")
+//        print("\(#function) self.chatList: \(self.chatList)")
+//        print("\(#function) previousChatList: \(previousChatList)")
+//        print("same : \(self.chatList == self.previousChatList)")
         switch self.diffableUpdateState {
         case .onAppear:
             self.diffableOnAppearAction(uiView, context: context)
@@ -100,10 +98,8 @@ extension ChatCollectionView {
             self.reloadItemAction(uiView, context: context)
         case .reconfigure(let isScroll):
             self.reconfigure(uiView, context: context, isScroll: isScroll)
-        }
-        
-        DispatchQueue.main.async {
-            self.previousChatList = self.chatList
+        case .reconfigureAnimate(let isScroll):
+            self.reconfigureAnimate(uiView, context: context, isScroll: isScroll)
         }
     }
 }
@@ -138,19 +134,30 @@ extension ChatCollectionView {
     
     func reloadItemAction(_ uiView: UICollectionView, context: Context) {
         Task {
-            await context.coordinator.reloadItem(item: self.previousChatList)
+            
         }
     }
     
     func reconfigure(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
         print("\(#function)")
         Task {
-            await context.coordinator.reconfigure(item: self.chatList)
+            await context.coordinator.reconfigureWithoutAnimating(item: self.chatList)
             if self.chatList.count > 0 && !context.coordinator.isEmpty() && isScroll {
-                print("스크롤")
                 uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: true)
             }
             self.diffableUpdateState = .waiting
         }
     }
+    
+    func reconfigureAnimate(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
+        print("\(#function)")
+        Task {
+            await context.coordinator.reconfigureWithAnimating(item: self.chatList)
+            if self.chatList.count > 0 && !context.coordinator.isEmpty() && isScroll {
+                uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: true)
+            }
+            self.diffableUpdateState = .waiting
+        }
+    }
+
 }
