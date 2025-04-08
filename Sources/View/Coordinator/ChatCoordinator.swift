@@ -195,16 +195,30 @@ extension ChatCoordinator {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
         let matchingItems: [ChatModel] = self.getReconfigureItem(oldItem: snapShot.itemIdentifiers, newItem: item)
+        let matchingIndex: [Int] = self.matchingIndex(from: item, to: snapShot.itemIdentifiers)
         
-        if !matchingItems.isEmpty {
-            snapShot.deleteItems(snapShot.itemIdentifiers)
+        print("상갑 logEvent \(#function) matchingIndex: \(matchingIndex)")
+        if ChatModel.self is AnyObject.Type {
+            print("클래스 타입")
             
-            snapShot.appendItems(consume item, toSection: .main)
+            await self.dataSource.applySnapshotUsingReloadData(snapShot)
+        } else {
+            print("그 외")
             
-            snapShot.reconfigureItems(consume matchingItems)
-            
-            await self.dataSource.apply(snapShot, animatingDifferences: true)
+            if !matchingItems.isEmpty {
+                snapShot.deleteItems(snapShot.itemIdentifiers)
+                
+                snapShot.appendItems(consume item, toSection: .main)
+                
+                snapShot.reconfigureItems(consume matchingItems)
+                
+                await self.dataSource.apply(snapShot, animatingDifferences: true)
+            }
         }
+    }
+    
+    func test(item: [ChatModel]) {
+        print("상갑 logEvent \(#function) item: \(item)")
     }
 }
 
@@ -226,7 +240,7 @@ extension ChatCoordinator {
             return []
         }
         
-        let matchingItemsInModel2 = filterModels.compactMap { item in
+        let matchingItemsInModel2: [ChatModel] = filterModels.compactMap { item in
             if let index = baseModels.firstIndex(where: { $0.id == item.id }) {
                 return baseModels[safe: index]
             } else {
@@ -235,6 +249,22 @@ extension ChatCoordinator {
         }
         
         return matchingItemsInModel2
+    }
+    
+    public func matchingIndex(from baseModels: consuming [ChatModel], to filterModels: consuming [ChatModel]) -> [Int] {
+        guard !baseModels.isEmpty && !filterModels.isEmpty else {
+            return []
+        }
+        
+        let matchingIndex: [Int] = filterModels.enumerated().compactMap { index, item in
+            if baseModels[safe: index] != item {
+                return index
+            } else {
+                return nil
+            }
+        }
+        
+        return matchingIndex
     }
 }
 
