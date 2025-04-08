@@ -7,6 +7,8 @@
 
 import Foundation
 
+import GabChat
+
 @frozen
 public enum ChatType: CaseIterable, Equatable {
     case text
@@ -29,8 +31,9 @@ public enum UpdateType: CaseIterable, Equatable {
     case isFoucsed
 }
 
-public class ChatModel: Hashable, Identifiable {
+public struct ChatModel: ItemProtocol {
     public static func == (lhs: ChatModel, rhs: ChatModel) -> Bool {
+        lhs.id == rhs.id &&
         lhs.memNo == rhs.memNo &&
         lhs.chatType == rhs.chatType &&
         lhs.sendType == rhs.sendType &&

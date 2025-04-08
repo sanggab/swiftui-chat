@@ -15,6 +15,9 @@ import ComposableArchitecture
 struct ContentView: View {
     @Perception.Bindable var store: StoreOf<GabChatDemoReducer>
     
+    
+    @State private var inputHeight: CGFloat = 0
+    
     @FocusState private var isFocused
     
     init(store: StoreOf<GabChatDemoReducer>) {
@@ -69,7 +72,10 @@ struct ContentView: View {
                         ImageCell(urlString: current.imgUrl ?? "")
                             .clipped()
                             .onTapGesture {
-                                self.store.send(.deleteChat(current))
+                                self.store.send(.reconfigureItem(current))
+                            }
+                            .onAppear {
+                                print("상갑 logEvent \(#function) img: \(current.imgUrl)")
                             }
                     case .delete:
                         DeletedCell()
@@ -83,12 +89,15 @@ struct ContentView: View {
                             textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
                             textView.textContainer.lineFragmentPadding = .zero
                         }
-                        .receiveTextViewHeight{ store.send(.updateInputHeight($0)) }
+                        .receiveTextViewHeight { height in
+                            inputHeight = height
+                        }
                         .setTextViewAppearanceModel(.default)
                         .overlayPlaceHolder(.leading) {
                             Text("메시지를 입력해주세요.")
                         }
-                        .frame(height: store.inputHeight)
+                        .frame(height: inputHeight)
+                        .frame(height: 50)
                         .frame(maxWidth: .infinity)
                         .focused($isFocused)
                         .bind($store.isFocused.sending(\.updateIsFocused), to: $isFocused)

@@ -33,6 +33,7 @@ struct GabChatDemoReducer {
         case deleteChat(ChatModel)
         
         case reloadItem
+        case reconfigureItem(ChatModel)
         
         case updateDiffableUpdateState(DiffableUpdateState)
         
@@ -79,7 +80,7 @@ struct GabChatDemoReducer {
             case .deleteChat(let chatModel):
                 if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
                     state.chatList[matchIndex].chatType = .delete
-                    print("\(#function) state.chatList[matchIndex].chatType: \(state.chatList[matchIndex].chatType)")
+                    print("\(#function) state.chatList[matchIndex].chatType: \(state.chatList[matchIndex].id)")
                     state.diffableUpdateState = .reconfigure(false)
                 }
                 
@@ -88,6 +89,13 @@ struct GabChatDemoReducer {
             case .reloadItem:
                 state.chatList[state.chatList.count - 1].chatType = .delete
                 state.diffableUpdateState = .reloadItem
+                return .none
+                
+            case .reconfigureItem(let chatModel):
+                if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
+                    state.chatList[matchIndex].imgUrl = "https://blog.kakaocdn.net/dn/dUy6fR/btrqmqsWSKk/ub13rlAwt1KMKvYHyvul61/img.png"
+                    state.diffableUpdateState = .reconfigureWithAnimate(false)
+                }
                 return .none
                 
             case .updateDiffableUpdateState(let diffableUpdateState):

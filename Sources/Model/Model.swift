@@ -40,6 +40,12 @@ public enum DiffableUpdateState: Equatable {
     case reloadItem
     /// Cell 재구성
     ///
+    /// Cell 재구성 시 애니메이션을 적용안한다.
     /// Bool값은 true일 경우 scrollToBottom 수행
     case reconfigure(Bool)
+    /// Cell 재구성
+    ///
+    /// Cell 재구성 시 애니메이션을 적용시킨다
+    /// Bool값은 true일 경우 scrollToBottom 수행
+    case reconfigureAnimate(Bool)
 }
