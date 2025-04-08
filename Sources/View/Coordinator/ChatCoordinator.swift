@@ -135,7 +135,7 @@ extension ChatCoordinator {
 }
 
 extension ChatCoordinator {
-    public func reloadItem(item: [ChatModel]) async {
+    public func reloadWithoutAnimate(item: [ChatModel]) async {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
         let currentItem: [ChatModel] = snapShot.itemIdentifiers
@@ -143,8 +143,56 @@ extension ChatCoordinator {
         let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: consume item)
         print("\(#function) remainItem: \(remainItem)")
         
-        await self.dataSource.apply(snapShot, animatingDifferences: true)
+//        await self.dataSource.apply(snapShot, animatingDifferences: false)
+    }
+    
+    public func reloadWithAnimate(item: [ChatModel]) async {
+        var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
+        let currentItem: [ChatModel] = snapShot.itemIdentifiers
+        
+        let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: consume item)
+        print("\(#function) remainItem: \(remainItem)")
+        
+//        await self.dataSource.apply(snapShot, animatingDifferences: true)
+    }
+    
+    public func reloadItemWithoutAnimate(item: [ChatModel]) async {
+        var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
+        
+        let currentItem: [ChatModel] = snapShot.itemIdentifiers
+        
+        let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: item)
+        print("\(#function) remainItem: \(remainItem)")
+        
+        if !remainItem.isEmpty {
+            snapShot.deleteItems(snapShot.itemIdentifiers)
+            
+            snapShot.appendItems(consume item, toSection: .main)
+            
+            snapShot.reloadItems(consume remainItem)
+            
+            await self.dataSource.apply(snapShot, animatingDifferences: false)
+        }
+    }
+    
+    public func reloadItemWithAnimate(item: [ChatModel]) async {
+        var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
+        
+        let currentItem: [ChatModel] = snapShot.itemIdentifiers
+        
+        let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: item)
+        print("\(#function) remainItem: \(remainItem)")
+        
+        if !remainItem.isEmpty {
+            snapShot.deleteItems(snapShot.itemIdentifiers)
+            
+            snapShot.appendItems(consume item, toSection: .main)
+            
+            snapShot.reloadItems(consume remainItem)
+            
+            await self.dataSource.apply(snapShot, animatingDifferences: true)
+        }
     }
 }
 // MARK: DiffableUpdateState - reconfigure

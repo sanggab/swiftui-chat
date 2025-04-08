@@ -25,22 +25,32 @@ public enum DiffableUpdateState: Equatable {
     ///
     /// > Note: snapShot에 데이터가 비어있을 경우에만 세팅을 하고 스크롤을 이동합니다.
     /// 만약 데이터가 존재 하는 데 onAppear시에는 아무 작동을 안합니다.
-    case onAppear
+    case onAppear(Bool)
     /// 작업 대기중
     case waiting
+//    case isScroll
+    
     /// 채팅 추가
     ///
     /// Bool값은 ture일 경우 scrollToBottom 수행
     /// > Note: 만약 추가한 채팅이 기존 채팅하고 비교할 때, 새로운 채팅 데이터가 존재하지 않으면
     /// 아무런 작동을 수행하지 않고 스크롤을 수행하지 않습니다.
     case appendItem(Bool)
-    /// CollectionView 전체 리로드
-    case reload
+    /// CollectionView 전체 reload
+    case reload(Bool)
+    /// CollectionView 전체 reload
+    case reloadAnimate(Bool)
     /// Cell Item 리로드
-    case reloadItem
+    ///
+    /// Cell reload 시 애니메이션을 적용 안 한다
+    case reloadItem(Bool)
+    /// cell Item 리로드
+    ///
+    /// Cell reload 시 애니메이션을 적용시킨다
+    case reloadItemAnimate(Bool)
     /// Cell 재구성
     ///
-    /// Cell 재구성 시 애니메이션을 적용안한다.
+    /// Cell 재구성 시 애니메이션을 적용 안 한다.
     /// Bool값은 true일 경우 scrollToBottom 수행
     case reconfigure(Bool)
     /// Cell 재구성

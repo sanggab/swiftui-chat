@@ -86,59 +86,97 @@ extension ChatCollectionView {
 //        print("\(#function) previousChatList: \(previousChatList)")
 //        print("same : \(self.chatList == self.previousChatList)")
         switch self.diffableUpdateState {
-        case .onAppear:
-            self.diffableOnAppearAction(uiView, context: context)
+        case .onAppear(let isScroll):
+            self.diffableOnAppearAction(uiView, context: context, isScroll: isScroll)
         case .waiting:
             print("대기..")
         case .appendItem(let isScroll):
             self.appendItem(uiView, context: context, isScroll: isScroll)
-        case .reload:
-            self.reloadAction(uiView, context: context)
-        case .reloadItem:
-            self.reloadItemAction(uiView, context: context)
+        case .reload(let isScroll):
+            self.reloadAction(uiView, context: context, isScroll: isScroll)
+        case .reloadAnimate(let isScroll):
+            self.reloadAnimateAction(uiView, context: context, isScroll: isScroll)
+        case .reloadItem(let isScroll):
+            self.reloadItemAction(uiView, context: context, isScroll: isScroll)
+        case .reloadItemAnimate(let isScroll):
+            self.reloadItemAnimateAction(uiView, context: context, isScroll: isScroll)
         case .reconfigure(let isScroll):
-            self.reconfigure(uiView, context: context, isScroll: isScroll)
+            self.reconfigureAction(uiView, context: context, isScroll: isScroll)
         case .reconfigureAnimate(let isScroll):
-            self.reconfigureAnimate(uiView, context: context, isScroll: isScroll)
+            self.reconfigureAnimateAction(uiView, context: context, isScroll: isScroll)
         }
     }
 }
 
 extension ChatCollectionView {
     @MainActor
-    func diffableOnAppearAction(_ uiView: UICollectionView, context: Context) {
+    func diffableOnAppearAction(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
         Task {
             await context.coordinator.onAppear(item: self.chatList)
-            if self.chatList.count > 0 && !context.coordinator.isEmpty() {
+            if self.chatList.count > 0 && !context.coordinator.isEmpty() && isScroll {
                 uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: false)
             }
             self.diffableUpdateState = .waiting
         }
     }
     
+    @MainActor
     func appendItem(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
         Task {
             let success: Bool = await context.coordinator.appendItem(item: self.chatList)
-            if self.chatList.count > 0 && !context.coordinator.isEmpty() && success {
+            if self.chatList.count > 0 && !context.coordinator.isEmpty() && success && isScroll {
                 uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: true)
             }
             self.diffableUpdateState = .waiting
         }
     }
     
-    func reloadAction(_ uiView: UICollectionView, context: Context) {
+    @MainActor
+    func reloadAction(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
         Task {
-//            await context.coordinator.reconfigure(item: self.chatList)
+            await context.coordinator.reloadWithoutAnimate(item: self.chatList)
+            if self.chatList.count > 0 && !context.coordinator.isEmpty() && isScroll {
+                uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: true)
+            }
+            self.diffableUpdateState = .waiting
         }
     }
     
-    func reloadItemAction(_ uiView: UICollectionView, context: Context) {
+    @MainActor
+    func reloadAnimateAction(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
         Task {
-            
+            await context.coordinator.reloadWithAnimate(item: self.chatList)
+            if self.chatList.count > 0 && !context.coordinator.isEmpty() && isScroll {
+                uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: true)
+            }
+            self.diffableUpdateState = .waiting
         }
     }
     
-    func reconfigure(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
+    @MainActor
+    func reloadItemAction(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
+        Task {
+            await context.coordinator.reloadItemWithoutAnimate(item: self.chatList)
+            if self.chatList.count > 0 && !context.coordinator.isEmpty() && isScroll {
+                uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: true)
+            }
+            self.diffableUpdateState = .waiting
+        }
+    }
+    
+    @MainActor
+    func reloadItemAnimateAction(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
+        Task {
+            await context.coordinator.reloadItemWithAnimate(item: self.chatList)
+            if self.chatList.count > 0 && !context.coordinator.isEmpty() && isScroll {
+                uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: true)
+            }
+            self.diffableUpdateState = .waiting
+        }
+    }
+    
+    @MainActor
+    func reconfigureAction(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
         print("\(#function)")
         Task {
             await context.coordinator.reconfigureWithoutAnimating(item: self.chatList)
@@ -149,7 +187,8 @@ extension ChatCollectionView {
         }
     }
     
-    func reconfigureAnimate(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
+    @MainActor
+    func reconfigureAnimateAction(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
         print("\(#function)")
         Task {
             await context.coordinator.reconfigureWithAnimating(item: self.chatList)

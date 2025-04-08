@@ -73,6 +73,7 @@ struct ContentView: View {
                             .clipped()
                             .onTapGesture {
                                 self.store.send(.reconfigureItem(current))
+//                                self.store.send(.deleteChat(current))
                             }
                             .onAppear {
                                 print("상갑 logEvent \(#function) img: \(current.imgUrl)")
