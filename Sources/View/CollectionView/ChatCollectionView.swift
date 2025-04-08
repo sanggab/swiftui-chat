@@ -30,7 +30,7 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable>: UIView
         diffableUpdateState: Binding<DiffableUpdateState>,
         inputHeight: CGFloat,
         safeAreaInsetBottom: CGFloat,
-        @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView,) {
+        @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView) {
             self._keyboardOption = keyboardOption
             self._diffableUpdateState = diffableUpdateState
             self.inputHeight = inputHeight
