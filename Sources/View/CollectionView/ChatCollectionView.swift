@@ -126,6 +126,7 @@ extension ChatCollectionView {
     func appendItem(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
         Task {
             let success: Bool = await context.coordinator.appendItems(item: self.chatList)
+            
             if self.chatList.count > 0 && !context.coordinator.isEmpty() && success && isScroll {
                 uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: true)
             }
