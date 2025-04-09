@@ -72,7 +72,7 @@ public final class ChatCoordinator<ContentView: View, ChatModel: ItemProtocol>: 
     }
     
     private func beforeListModel(in index: IndexPath) -> ChatModel? {
-        return self.dataSource.itemIdentifier(for: index)
+        return self.dataSource.snapshot().itemIdentifiers[safe: index.item - 1]
     }
     
     public func check() {

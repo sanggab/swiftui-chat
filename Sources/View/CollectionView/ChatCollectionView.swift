@@ -66,13 +66,16 @@ public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UI
 extension ChatCollectionView {
     @MainActor
     func conditionInputUpdateState(_ uiView: UICollectionView, context: Context) {
-        switch self.inputUpdateState {
-        case .waiting:
-            self.waitingAction()
-        case .textInput:
-            self.textInputAction(uiView)
-        case .keyboard:
-            self.controlOffsetWithKeyboard(uiView)
+        if diffableUpdateState == .waiting {
+            switch self.inputUpdateState {
+            case .waiting:
+                print("상갑 logEvent \(#function) waiting")
+                self.waitingAction()
+            case .textInput:
+                self.textInputAction(uiView)
+            case .keyboard:
+                self.controlOffsetWithKeyboard(uiView)
+            }
         }
     }
 }
@@ -85,7 +88,7 @@ extension ChatCollectionView {
             case .onAppear(let isScroll):
                 self.diffableOnAppearAction(uiView, context: context, isScroll: isScroll)
             case .waiting:
-                print("대기..")
+                print("상갑 logEvent \(#function) waiting")
             case .appendItem(let isScroll):
                 self.appendItem(uiView, context: context, isScroll: isScroll)
             case .reload(let isScroll):

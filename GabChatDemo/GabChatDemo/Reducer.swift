@@ -74,7 +74,7 @@ struct GabChatDemoReducer {
                 
                 let newMsgNo: Int = (state.chatList.last?.msgNo ?? -99) + 1
                 
-                let newChatModel: ChatModel = .init(memNo: 2805, chatType: .img, sendType: .send, imgUrl: imgUrl, msgNo: newMsgNo)
+                let newChatModel: ChatModel = .init(memNo: 2805, chatType: .img, sendType: .send, imgUrl: imgUrl, msgNo: newMsgNo, insDate: Int(Date().timeIntervalSince1970))
                 
                 state.chatList.append(newChatModel)
                 
@@ -85,7 +85,7 @@ struct GabChatDemoReducer {
                 if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
                     state.chatList[matchIndex].chatType = .delete
                     print("\(#function) state.chatList[matchIndex].chatType: \(state.chatList[matchIndex].id)")
-                    state.diffableUpdateState = .reconfigure(isScroll: true)
+                    state.diffableUpdateState = .reconfigure(isScroll: false)
                 }
                 
                 return .none

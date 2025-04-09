@@ -15,7 +15,6 @@ import ComposableArchitecture
 struct ContentView: View {
     @Perception.Bindable var store: StoreOf<GabChatDemoReducer>
     
-    
     @State private var inputHeight: CGFloat = 0
     
     @FocusState private var isFocused
@@ -25,6 +24,7 @@ struct ContentView: View {
     }
     
     var body: some View {
+        let _ = Self._printChanges()
         WithPerceptionTracking {
             HStack {
                 Rectangle()
@@ -63,6 +63,14 @@ struct ContentView: View {
             ChatView(chatList: store.chatList,
                      diffableUpdateState: $store.diffableUpdateState.sending(\.updateDiffableUpdateState)) { (before: ChatModel?, current: ChatModel) in
                 WithPerceptionTracking {
+                    let previousDate: String = before?.insDate.makeLocaleDate() ?? ""
+                    let currentDate: String = current.insDate.makeLocaleDate()
+                    
+                    if previousDate != currentDate {
+                        DateCell(insDate: currentDate)
+                            .background(.orange)
+                    }
+                    
                     switch current.chatType {
                     case .text:
                         TextCell(text: current.text)
@@ -74,9 +82,9 @@ struct ContentView: View {
                             .clipped()
                             .onTapGesture {
 //                                self.store.send(.reloadItem(current))
-//                                self.store.send(.reconfigureItem(current))
+                                self.store.send(.reconfigureItem(current))
 //                                self.store.send(.test(current))
-                                self.store.send(.reload(current))
+//                                self.store.send(.reload(current))
                             }
                     case .delete:
                         DeletedCell()
