@@ -19,13 +19,13 @@ public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UI
     @State var previousInputHeight: CGFloat = 0
     @State var previousKeyboardHeight: CGFloat = 0
     
-    @Binding var diffableUpdateState: DiffableUpdateState
+    @Binding var diffableUpdateState: DiffableUpdateState<ChatModel>
     let chatList: [ChatModel]
     
     public init(
         chatList: [ChatModel],
         keyboardOption: Binding<KeyboardOption>,
-        diffableUpdateState: Binding<DiffableUpdateState>,
+        diffableUpdateState: Binding<DiffableUpdateState<ChatModel>>,
         inputHeight: CGFloat,
         safeAreaInsetBottom: CGFloat,
         @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView) {
@@ -100,6 +100,8 @@ extension ChatCollectionView {
             self.reconfigure(uiView, context: context, isScroll: isScroll)
         case .reconfigureAnimate(let isScroll):
             self.reconfigureAnimate(uiView, context: context, isScroll: isScroll)
+        case .hi(let item):
+            print("상갑 logEvent \(#function) hi")
         }
     }
 }

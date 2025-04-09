@@ -22,8 +22,11 @@ public final class ChatCoordinator<ContentView: View, ChatModel: ItemProtocol>: 
     
     private var dataSource: UICollectionViewDiffableDataSource<MockSection, ChatModel>!
     
+    let isClassType: Bool
+    
     public init(itemBuilder: @escaping (ItemBuilderClosure) -> ContentView) {
         self.itemBuilder = itemBuilder
+        self.isClassType = ChatModel.self is AnyObject.Type
     }
     
     public func createCompositionalLayout() -> UICollectionViewCompositionalLayout {
@@ -104,8 +107,25 @@ extension ChatCoordinator {
 
 // MARK: DiffableUpdateState - appendItem
 extension ChatCoordinator {
+    /// snapShot에 Cell 추가
+    ///
+    /// snapShot에 item을 추가하고 apply 시킨다.
     @MainActor
-    public func appendItem(item: [ChatModel]) async -> Bool {
+    public func appendItem(item: consuming ChatModel) async {
+        var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
+        
+        snapShot.appendItems([consume item])
+        await self.dataSource.apply(snapShot)
+    }
+    /// snapShot에 Cell 추가
+    ///
+    /// 현재 snapShot의 item하고 파라미터의 item하고 비교해서 중복이 아닌 item들을 뽑아내서 item이 비어있지 않으면 apply 시켜준다
+    ///
+    /// - returns: snapShot에 item 추가가 성공하면 true / 실패하면 false를 반환
+    ///
+    /// > Note: ``appendItem(item:)`` 하고 다르게 현재 snapShot의 item들과 비교해서 중복이 아닌 데이터들을 따로 뽑아내 추가합니다.
+    @MainActor
+    public func appendItems(item: [ChatModel]) async -> Bool {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
         let currentItem: [ChatModel] = snapShot.itemIdentifiers
@@ -120,10 +140,12 @@ extension ChatCoordinator {
         
         return false
     }
-    
+    /// 두 파라미터를 비교해서 중복을 데이터를 데이터를 던져준다
+    ///
+    /// newItem에 filter을 돌려서 oldItem의 리스트에서 포함되지 않는 item들을 뽑아서 반환해준다.
+    ///
+    /// - returns: oldItem에 포함되지 않은 item들을 반환 - [ChatModel]
     public func removeDuplicates(oldItem: consuming [ChatModel], newItem: consuming [ChatModel]) -> [ChatModel] {
-        print("상갑 logEvent \(#function) newItem: \(newItem)")
-        print("상갑 logEvent \(#function) oldItem: \(oldItem)")
         return newItem.filter { item in
             if !oldItem.contains(item) {
                 return true
@@ -135,6 +157,7 @@ extension ChatCoordinator {
 }
 
 extension ChatCoordinator {
+    @MainActor
     public func reloadItem(item: [ChatModel]) async {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
@@ -158,61 +181,89 @@ extension ChatCoordinator {
     /// > Note: chatList가 Binding이든 아니든 snapShot 바로 갱신되버림
     /// 이유를 찾았따! ChatModel이 Class면 스냅샷에 바로 갱신되고 Struct면 아님
     /// 값 타입과 참조 타입의 차이
+    ///
+    /// > Warning: 만약 ChatModel이 Class 타입인 경우, 전체 item을 다 reload 시킵니다.
     @available(*, deprecated, renamed: "reconfigureWithoutAnimating(item:)", message: "documentation 참조")
+    @MainActor
     public func reconfigure(item: [ChatModel]) async {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
-        let currentItem: [ChatModel] = snapShot.itemIdentifiers
-        
-        let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: consume item)
-        
-        snapShot.reconfigureItems(remainItem)
-        
-        await self.dataSource.apply(snapShot)
+        if !isClassType {
+            let currentItem: [ChatModel] = snapShot.itemIdentifiers
+            
+            let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: consume item)
+            
+            snapShot.reconfigureItems(remainItem)
+            
+            await self.dataSource.apply(snapShot)
+        } else {
+            await self.dataSource.applySnapshotUsingReloadData(snapShot)
+        }
     }
-    /// 애니메이션 없이 Cell을 재구성
+    /// snapShot의 Cell을 애니메이션 없이 재구성
     ///
     /// 파라미터의 item하고 snapShot의 item을 비교해서 id값이 일치하지만 데이터가 달라진 item을 찾아 해당 Cell만 reconfigureItem을 애니메이션 없이 실행한다.
+    ///
+    /// > Warning: 만약 ChatModel이 Class 타입인 경우, 전체 item을 다 reload 시킵니다.
+    @MainActor
     public func reconfigureWithoutAnimating(item: [ChatModel]) async {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
-        let matchingItems: [ChatModel] = self.getReconfigureItem(oldItem: snapShot.itemIdentifiers, newItem: item)
-        
-        if !matchingItems.isEmpty {
-            snapShot.deleteItems(snapShot.itemIdentifiers)
+        if !isClassType {
+            let reconfigureItems: [ChatModel] = self.removeDuplicates(oldItem: snapShot.itemIdentifiers, newItem: item)
             
-            snapShot.appendItems(consume item, toSection: .main)
-            
-            snapShot.reconfigureItems(consume matchingItems)
-            
-            await self.dataSource.apply(snapShot, animatingDifferences: false)
+            if !reconfigureItems.isEmpty {
+                snapShot.deleteItems(snapShot.itemIdentifiers)
+                
+                snapShot.appendItems(consume item, toSection: .main)
+                
+                snapShot.reconfigureItems(consume reconfigureItems)
+                
+                await self.dataSource.apply(snapShot, animatingDifferences: false)
+            }
+        } else {
+            await self.dataSource.applySnapshotUsingReloadData(snapShot)
         }
     }
-    /// 애니메이션 없이 Cell을 재구성
+    /// snapShot의 Cell을 애니메이션 있이 재구성
     ///
     /// 파라미터의 item하고 snapShot의 item을 비교해서 id값이 일치하지만 데이터가 달라진 item을 찾아 해당 Cell만 reconfigureItem을 애니메이션 있이 실행한다.
+    ///
+    /// > Warning: 만약 ChatModel이 Class 타입인 경우, 전체 item을 다 reload 시킵니다.
+    @MainActor
     public func reconfigureWithAnimating(item: [ChatModel]) async {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
-        let matchingItems: [ChatModel] = self.getReconfigureItem(oldItem: snapShot.itemIdentifiers, newItem: item)
-        
-        if !matchingItems.isEmpty {
-            snapShot.deleteItems(snapShot.itemIdentifiers)
+        if !isClassType {
+            let reconfigureItems: [ChatModel] = self.removeDuplicates(oldItem: snapShot.itemIdentifiers, newItem: item)
             
-            snapShot.appendItems(consume item, toSection: .main)
-            
-            snapShot.reconfigureItems(consume matchingItems)
-            
-            await self.dataSource.apply(snapShot, animatingDifferences: true)
+            if !reconfigureItems.isEmpty {
+                snapShot.deleteItems(snapShot.itemIdentifiers)
+                
+                snapShot.appendItems(consume item, toSection: .main)
+                
+                snapShot.reconfigureItems(consume reconfigureItems)
+                
+                await self.dataSource.apply(snapShot, animatingDifferences: true)
+            }
+        } else {
+            await self.dataSource.applySnapshotUsingReloadData(snapShot)
         }
     }
+    
+
 }
 
 extension ChatCoordinator {
+    /// snapShot에 itemIdentifiers가 비어있는지 확인하는 기능
+    ///
+    /// - returns:snapShot의 itemIdentifiers가 0이하인 경우 true / 초과인 경우 false를 반환합니다.
     public func isEmpty() -> Bool {
         return self.dataSource.snapshot().itemIdentifiers.count <= 0
     }
-    
+    /// oldItem과 newItem을 비교해서 reconfigure를 시킬 item을 뽑아내는 기능
+    ///
+    /// newItem을 filter를 돌려서 oldItem에 포함안되는 chatModel들을 뽑아
     public func getReconfigureItem(oldItem: consuming [ChatModel], newItem: [ChatModel]) -> [ChatModel] {
         let remainItems: [ChatModel] = self.removeDuplicates(oldItem: consume oldItem, newItem: newItem)
         
@@ -220,13 +271,17 @@ extension ChatCoordinator {
         
         return matchingItems
     }
-    
+    /// 두 파라미터를 비교해서 같은 아이템들을 찾아내는 기능
+    ///
+    /// filterModels을 고차하수 돌려서 baseModels의 아이템과 id가 일치한 ChatModel을 반환해준다.
+    ///
+    /// - returns: id가 일치한 ChatModel 배열 - [ChatModel]
     public func matchingItems(from baseModels: consuming [ChatModel], to filterModels: consuming [ChatModel]) -> [ChatModel] {
         guard !baseModels.isEmpty && !filterModels.isEmpty else {
             return []
         }
         
-        let matchingItemsInModel2 = filterModels.compactMap { item in
+        let matchingItemsInModel2: [ChatModel] = filterModels.compactMap { item in
             if let index = baseModels.firstIndex(where: { $0.id == item.id }) {
                 return baseModels[safe: index]
             } else {
@@ -235,6 +290,26 @@ extension ChatCoordinator {
         }
         
         return matchingItemsInModel2
+    }
+    /// 두 파라미터를 비교해서 서로 다른 아이템들의 인덱스들을 찾아내는 기능
+    ///
+    /// filterModels을 고차함수 돌려서 baseModels와 데이터가 변한 아이템의 인덱스들을 찾아내서 던져준다
+    ///
+    /// - returns: 데이터가 변한 아이템의 인덱스들을 반환 - [Int]
+    public func matchingIndex(from baseModels: consuming [ChatModel], to filterModels: consuming [ChatModel]) -> [Int] {
+        guard !baseModels.isEmpty && !filterModels.isEmpty else {
+            return []
+        }
+        
+        let matchingIndex: [Int] = filterModels.enumerated().compactMap { index, item in
+            if baseModels[safe: index] != item {
+                return index
+            } else {
+                return nil
+            }
+        }
+        
+        return matchingIndex
     }
 }
 

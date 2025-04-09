@@ -14,7 +14,7 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: ItemProtoc
     @ViewBuilder private let inputBuilderClosure: () -> InputView
     
     let chatList: [ChatModel]
-    @Binding public var diffableUpdateState: DiffableUpdateState
+    @Binding public var diffableUpdateState: DiffableUpdateState<ChatModel>
     
     @State private var keyboardOption: KeyboardOption = .default
     
@@ -22,7 +22,7 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: ItemProtoc
     @State private var insetBottom: CGFloat = 0
     
     public init(chatList: [ChatModel],
-                diffableUpdateState: Binding<DiffableUpdateState>,
+                diffableUpdateState: Binding<DiffableUpdateState<ChatModel>>,
                 @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView,
                 @ViewBuilder inputBuilderClosure: @escaping () -> InputView) {
         self.chatList = chatList

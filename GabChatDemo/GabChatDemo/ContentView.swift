@@ -73,9 +73,7 @@ struct ContentView: View {
                             .clipped()
                             .onTapGesture {
                                 self.store.send(.reconfigureItem(current))
-                            }
-                            .onAppear {
-                                print("상갑 logEvent \(#function) img: \(current.imgUrl)")
+//                                self.store.send(.test(current))
                             }
                     case .delete:
                         DeletedCell()
@@ -104,9 +102,9 @@ struct ContentView: View {
                 }
             }
             .background(.mint)
-            .onTapGesture {
-                isFocused = false
-            }
+//            .onTapGesture {
+//                isFocused = false
+//            }
         }
 
     }
