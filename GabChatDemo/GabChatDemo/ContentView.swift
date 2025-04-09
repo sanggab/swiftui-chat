@@ -54,7 +54,7 @@ struct ContentView: View {
                         Text("DiffableUpdateState reloadItem")
                     }
                     .onTapGesture {
-                        self.store.send(.reloadItem)
+//                        self.store.send(.reloadItem)
                     }
 
             }
@@ -72,7 +72,8 @@ struct ContentView: View {
                         ImageCell(urlString: current.imgUrl ?? "")
                             .clipped()
                             .onTapGesture {
-                                self.store.send(.reconfigureItem(current))
+                                self.store.send(.reloadItem(current))
+//                                self.store.send(.reconfigureItem(current))
 //                                self.store.send(.test(current))
                             }
                     case .delete:

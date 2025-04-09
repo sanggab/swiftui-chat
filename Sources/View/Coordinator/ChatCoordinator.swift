@@ -182,38 +182,40 @@ extension ChatCoordinator {
     public func reloadItemWithoutAnimate(item: [ChatModel]) async {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
-        let currentItem: [ChatModel] = snapShot.itemIdentifiers
-        
-        let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: item)
-        print("\(#function) remainItem: \(remainItem)")
-        
-        if !remainItem.isEmpty {
-            snapShot.deleteItems(snapShot.itemIdentifiers)
+        if !isClassType {
+            let reloadItem: [ChatModel] = self.removeDuplicates(oldItem: snapShot.itemIdentifiers, newItem: item)
             
-            snapShot.appendItems(consume item, toSection: .main)
-            
-            snapShot.reloadItems(consume remainItem)
-            
-            await self.dataSource.apply(snapShot, animatingDifferences: false)
+            if !reloadItem.isEmpty {
+                snapShot.deleteItems(snapShot.itemIdentifiers)
+                
+                snapShot.appendItems(consume item, toSection: .main)
+                
+                snapShot.reloadItems(consume reloadItem)
+                
+                await self.dataSource.apply(snapShot, animatingDifferences: false)
+            }
+        } else {
+            await self.dataSource.applySnapshotUsingReloadData(snapShot)
         }
     }
     
     public func reloadItemWithAnimate(item: [ChatModel]) async {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
-        let currentItem: [ChatModel] = snapShot.itemIdentifiers
-        
-        let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: item)
-        print("\(#function) remainItem: \(remainItem)")
-        
-        if !remainItem.isEmpty {
-            snapShot.deleteItems(snapShot.itemIdentifiers)
+        if !isClassType {
+            let reloadItem: [ChatModel] = self.removeDuplicates(oldItem: snapShot.itemIdentifiers, newItem: item)
             
-            snapShot.appendItems(consume item, toSection: .main)
-            
-            snapShot.reloadItems(consume remainItem)
-            
-            await self.dataSource.apply(snapShot, animatingDifferences: true)
+            if !reloadItem.isEmpty {
+                snapShot.deleteItems(snapShot.itemIdentifiers)
+                
+                snapShot.appendItems(consume item, toSection: .main)
+                
+                snapShot.reloadItems(consume reloadItem)
+                
+                await self.dataSource.apply(snapShot, animatingDifferences: true)
+            }
+        } else {
+            await self.dataSource.applySnapshotUsingReloadData(snapShot)
         }
     }
 }

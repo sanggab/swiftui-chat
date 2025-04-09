@@ -32,8 +32,10 @@ struct GabChatDemoReducer {
         
         case deleteChat(ChatModel)
         
-        case reloadItem
+//        case reloadItem
         case reconfigureItem(ChatModel)
+        
+        case reloadItem(ChatModel)
         
         case test(ChatModel)
         
@@ -49,7 +51,7 @@ struct GabChatDemoReducer {
             switch action {
             case .onAppear:
                 state.chatList = ChatModel.makeEmptyData()
-                state.diffableUpdateState = .onAppear(false)
+                state.diffableUpdateState = .onAppear(true)
                 return .none
                 
             case .updateChatList(let list):
@@ -88,9 +90,11 @@ struct GabChatDemoReducer {
                 
                 return .none
                 
-            case .reloadItem:
-                state.chatList[state.chatList.count - 1].chatType = .delete
-                state.diffableUpdateState = .reloadItem(true)
+            case .reloadItem(let chatModel):
+                if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
+                    state.chatList[matchIndex].chatType = .delete
+                    state.diffableUpdateState = .reloadItemAnimate(true)
+                }
                 return .none
                 
             case .reconfigureItem(let chatModel):
