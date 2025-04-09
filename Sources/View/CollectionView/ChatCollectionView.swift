@@ -54,10 +54,6 @@ public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UI
     }
     
     public func updateUIView(_ uiView: UICollectionView, context: Context) {
-//        print("\(#function) inputUpdateState: \(self.inputUpdateState)")
-//        print("\(#function) diffableUpdateState: \(self.diffableUpdateState)")
-//        print("\(#function) chatList: \(self.chatList)")
-//        print("\(#function) diffableUpdateState: \(context.coordinator.check())")
         self.conditionInputUpdateState(uiView, context: context)
         self.conditionDiffableUpdateState(uiView, context: context)
     }
@@ -104,8 +100,8 @@ extension ChatCollectionView {
                 self.reconfigureAction(uiView, context: context, isScroll: isScroll)
             case .reconfigureAnimate(let isScroll):
                 self.reconfigureAnimateAction(uiView, context: context, isScroll: isScroll)
-            case .hi(let item):
-                print("상갑 logEvent \(#function) hi")
+            default:
+                break
             }
         }
         

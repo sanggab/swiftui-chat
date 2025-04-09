@@ -38,7 +38,6 @@ struct GabChatDemoReducer {
         case reloadItem(ChatModel)
         
         case reload(ChatModel)
-        case test(ChatModel)
         
         case updateDiffableUpdateState(DiffableUpdateState<ChatModel>)
         
@@ -52,7 +51,7 @@ struct GabChatDemoReducer {
             switch action {
             case .onAppear:
                 state.chatList = ChatModel.makeEmptyData()
-                state.diffableUpdateState = .onAppear(true)
+                state.diffableUpdateState = .onAppear(isScroll: true)
                 return .none
                 
             case .updateChatList(let list):
@@ -79,14 +78,14 @@ struct GabChatDemoReducer {
                 
                 state.chatList.append(newChatModel)
                 
-                state.diffableUpdateState = .appendItem(true)
+                state.diffableUpdateState = .appendItem(isScroll: true)
                 return .none
                 
             case .deleteChat(let chatModel):
                 if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
                     state.chatList[matchIndex].chatType = .delete
                     print("\(#function) state.chatList[matchIndex].chatType: \(state.chatList[matchIndex].id)")
-                    state.diffableUpdateState = .reconfigure(true)
+                    state.diffableUpdateState = .reconfigure(isScroll: true)
                 }
                 
                 return .none
@@ -94,21 +93,21 @@ struct GabChatDemoReducer {
             case .reloadItem(let chatModel):
                 if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
                     state.chatList[matchIndex].chatType = .delete
-                    state.diffableUpdateState = .reloadItemAnimate(true)
+                    state.diffableUpdateState = .reloadItemAnimate(isScroll: true)
                 }
                 return .none
                 
             case .reload(let chatModel):
                 if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
                     state.chatList[matchIndex].chatType = .delete
-                    state.diffableUpdateState = .reload(true)
+                    state.diffableUpdateState = .reload(isScroll: true)
                 }
                 return .none
                 
             case .reconfigureItem(let chatModel):
                 if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
                     state.chatList[matchIndex].imgUrl = "https://blog.kakaocdn.net/dn/dUy6fR/btrqmqsWSKk/ub13rlAwt1KMKvYHyvul61/img.png"
-                    state.diffableUpdateState = .reconfigureAnimate(false)
+                    state.diffableUpdateState = .reconfigureAnimate(isScroll: false)
                 }
                 return .none
                 
@@ -126,10 +125,6 @@ struct GabChatDemoReducer {
                 
             case .updateInputHeight(let height):
                 state.inputHeight = height
-                return .none
-                
-            case .test(let model):
-                state.diffableUpdateState = .hi(model)
                 return .none
             }
         }
