@@ -101,7 +101,7 @@ extension ChatCollectionView {
         case .reconfigureAnimate(let isScroll):
             self.reconfigureAnimate(uiView, context: context, isScroll: isScroll)
         case .hi(let item):
-            context.coordinator.test(item: [item])
+            print("상갑 logEvent \(#function) hi")
         }
     }
 }

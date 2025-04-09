@@ -75,9 +75,6 @@ struct ContentView: View {
                                 self.store.send(.reconfigureItem(current))
 //                                self.store.send(.test(current))
                             }
-                            .onAppear {
-                                print("상갑 logEvent \(#function) img: \(current.imgUrl)")
-                            }
                     case .delete:
                         DeletedCell()
                     }
