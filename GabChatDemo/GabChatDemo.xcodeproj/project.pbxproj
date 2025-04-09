@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B9BBA542DA281E100F17B88 /* GabChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9BBA532DA281E100F17B88 /* GabChat.framework */; };
+		4B9BBA552DA281E100F17B88 /* GabChat.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B9BBA532DA281E100F17B88 /* GabChat.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B9BBA592DA281FB00F17B88 /* GabTextView in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BBA582DA281FB00F17B88 /* GabTextView */; };
 		4B9BBA5C2DA2824800F17B88 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BBA5B2DA2824800F17B88 /* ComposableArchitecture */; };
 		4B9BBABF2DA289F400F17B88 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 4B9BBABE2DA289F400F17B88 /* Kingfisher */; };
-		EF21B98E2DA6027400C743D7 /* GabChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF21B98D2DA6027400C743D7 /* GabChat.framework */; };
-		EF21B98F2DA6027400C743D7 /* GabChat.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EF21B98D2DA6027400C743D7 /* GabChat.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,13 +32,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		EF21B9902DA6027500C743D7 /* Embed Frameworks */ = {
+		4B9BBA562DA281E100F17B88 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				EF21B98F2DA6027400C743D7 /* GabChat.framework in Embed Frameworks */,
+				4B9BBA552DA281E100F17B88 /* GabChat.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -49,7 +49,7 @@
 		4B9BB8AA2DA26D0F00F17B88 /* GabChatDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GabChatDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B9BB8B72DA26D1000F17B88 /* GabChatDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GabChatDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B9BB8C12DA26D1000F17B88 /* GabChatDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GabChatDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EF21B98D2DA6027400C743D7 /* GabChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GabChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B9BBA532DA281E100F17B88 /* GabChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GabChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -76,9 +76,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B9BBABF2DA289F400F17B88 /* Kingfisher in Frameworks */,
+				4B9BBA542DA281E100F17B88 /* GabChat.framework in Frameworks */,
 				4B9BBA592DA281FB00F17B88 /* GabTextView in Frameworks */,
 				4B9BBA5C2DA2824800F17B88 /* ComposableArchitecture in Frameworks */,
-				EF21B98E2DA6027400C743D7 /* GabChat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,7 +123,7 @@
 		4B9BBA522DA281E100F17B88 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				EF21B98D2DA6027400C743D7 /* GabChat.framework */,
+				4B9BBA532DA281E100F17B88 /* GabChat.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -138,7 +138,7 @@
 				4B9BB8A62DA26D0F00F17B88 /* Sources */,
 				4B9BB8A72DA26D0F00F17B88 /* Frameworks */,
 				4B9BB8A82DA26D0F00F17B88 /* Resources */,
-				EF21B9902DA6027500C743D7 /* Embed Frameworks */,
+				4B9BBA562DA281E100F17B88 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

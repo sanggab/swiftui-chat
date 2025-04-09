@@ -25,9 +25,30 @@
 		4B9BB88B2DA26C5C00F17B88 /* GabChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GabChatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4B9BB8A02DA26CB700F17B88 /* Exceptions for "Sources" folder in "GabChat" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Model/Model.swift,
+				Model/PreferenceKey.swift,
+				Utils/Keyboard.swift,
+				"View/CollectionView/ChatCollectionView + Animation.swift",
+				"View/CollectionView/ChatCollectionView + Helper.swift",
+				"View/CollectionView/ChatCollectionView + Update.swift",
+				View/CollectionView/ChatCollectionView.swift,
+				View/Coordinator/ChatCoordinator.swift,
+				View/Main/ChatView.swift,
+			);
+			target = 4B9BB8822DA26C5C00F17B88 /* GabChat */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4B9BB8982DA26C8800F17B88 /* Sources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4B9BB8A02DA26CB700F17B88 /* Exceptions for "Sources" folder in "GabChat" target */,
+			);
 			path = Sources;
 			sourceTree = "<group>";
 		};
