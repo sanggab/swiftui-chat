@@ -11,7 +11,7 @@ enum MockSection: Int {
     case main
 }
 /// ChatCollectionView에서 내부적으로 keyboard와 textView의 입력시의 상태에 따른 offset값 조정을 위한 State
-enum InputUpdateState: Equatable {
+public enum InputUpdateState: Equatable {
     /// 작업 대기중
     case waiting
     /// 키보드 상태변화
@@ -37,16 +37,20 @@ public enum DiffableUpdateState<ChatModel: Hashable>: Equatable {
     /// 아무런 작동을 수행하지 않고 스크롤을 수행하지 않습니다.
     case appendItem(Bool)
     /// CollectionView 전체 reload
+    ///
+    /// snapShot의 item을 다 삭제하고 현재 item들로 세팅한다음 reload를 해줍니다.
     case reload(Bool)
     /// CollectionView 전체 reload
     case reloadAnimate(Bool)
     /// Cell Item 리로드
     ///
     /// Cell reload 시 애니메이션을 적용 안 한다
+    /// > Waring: 채팅 모델 타입이 struct일 때 변하고자 하는 Item만 reload를 진행합니다.
     case reloadItem(Bool)
     /// cell Item 리로드
     ///
     /// Cell reload 시 애니메이션을 적용시킨다
+    /// > Waring: 채팅 모델 타입이 struct일 때 변하고자 하는 Item만 reload를 진행합니다.
     case reloadItemAnimate(Bool)
     /// Cell 재구성
     ///

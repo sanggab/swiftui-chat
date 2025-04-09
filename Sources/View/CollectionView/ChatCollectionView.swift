@@ -15,7 +15,7 @@ public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UI
     let inputHeight: CGFloat
     let safeAreaInsetBottom: CGFloat
     
-    @State var inputUpdateState: InputUpdateState = .waiting
+    @Binding var inputUpdateState: InputUpdateState
     @State var previousInputHeight: CGFloat = 0
     @State var previousKeyboardHeight: CGFloat = 0
     
@@ -25,11 +25,13 @@ public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UI
     public init(
         chatList: [ChatModel],
         keyboardOption: Binding<KeyboardOption>,
+        inputUpdateState: Binding<InputUpdateState>,
         diffableUpdateState: Binding<DiffableUpdateState<ChatModel>>,
         inputHeight: CGFloat,
         safeAreaInsetBottom: CGFloat,
         @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView) {
             self._keyboardOption = keyboardOption
+            self._inputUpdateState = inputUpdateState
             self._diffableUpdateState = diffableUpdateState
             self.inputHeight = inputHeight
             self.safeAreaInsetBottom = safeAreaInsetBottom
@@ -82,31 +84,31 @@ extension ChatCollectionView {
 extension ChatCollectionView {
     @MainActor
     func conditionDiffableUpdateState(_ uiView: UICollectionView, context: Context) {
-//        print("\(#function) self.chatList: \(self.chatList)")
-//        print("\(#function) previousChatList: \(previousChatList)")
-//        print("same : \(self.chatList == self.previousChatList)")
-        switch self.diffableUpdateState {
-        case .onAppear(let isScroll):
-            self.diffableOnAppearAction(uiView, context: context, isScroll: isScroll)
-        case .waiting:
-            print("대기..")
-        case .appendItem(let isScroll):
-            self.appendItem(uiView, context: context, isScroll: isScroll)
-        case .reload(let isScroll):
-            self.reloadAction(uiView, context: context, isScroll: isScroll)
-        case .reloadAnimate(let isScroll):
-            self.reloadAnimateAction(uiView, context: context, isScroll: isScroll)
-        case .reloadItem(let isScroll):
-            self.reloadItemAction(uiView, context: context, isScroll: isScroll)
-        case .reloadItemAnimate(let isScroll):
-            self.reloadItemAnimateAction(uiView, context: context, isScroll: isScroll)
-        case .reconfigure(let isScroll):
-            self.reconfigureAction(uiView, context: context, isScroll: isScroll)
-        case .reconfigureAnimate(let isScroll):
-            self.reconfigureAnimateAction(uiView, context: context, isScroll: isScroll)
-        case .hi(let item):
-            print("상갑 logEvent \(#function) hi")
+        if self.inputUpdateState != .keyboard {
+            switch self.diffableUpdateState {
+            case .onAppear(let isScroll):
+                self.diffableOnAppearAction(uiView, context: context, isScroll: isScroll)
+            case .waiting:
+                print("대기..")
+            case .appendItem(let isScroll):
+                self.appendItem(uiView, context: context, isScroll: isScroll)
+            case .reload(let isScroll):
+                self.reloadAction(uiView, context: context, isScroll: isScroll)
+            case .reloadAnimate(let isScroll):
+                self.reloadAnimateAction(uiView, context: context, isScroll: isScroll)
+            case .reloadItem(let isScroll):
+                self.reloadItemAction(uiView, context: context, isScroll: isScroll)
+            case .reloadItemAnimate(let isScroll):
+                self.reloadItemAnimateAction(uiView, context: context, isScroll: isScroll)
+            case .reconfigure(let isScroll):
+                self.reconfigureAction(uiView, context: context, isScroll: isScroll)
+            case .reconfigureAnimate(let isScroll):
+                self.reconfigureAnimateAction(uiView, context: context, isScroll: isScroll)
+            case .hi(let item):
+                print("상갑 logEvent \(#function) hi")
+            }
         }
+        
     }
 }
 
@@ -139,7 +141,7 @@ extension ChatCollectionView {
         Task {
             await context.coordinator.reloadWithoutAnimate(item: self.chatList)
             if self.chatList.count > 0 && !context.coordinator.isEmpty() && isScroll {
-                uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: true)
+                uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: false)
             }
             self.diffableUpdateState = .waiting
         }
@@ -180,7 +182,6 @@ extension ChatCollectionView {
     
     @MainActor
     func reconfigureAction(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
-        print("\(#function)")
         Task {
             await context.coordinator.reconfigureWithoutAnimating(item: self.chatList)
             if self.chatList.count > 0 && !context.coordinator.isEmpty() && isScroll {
@@ -192,7 +193,6 @@ extension ChatCollectionView {
     
     @MainActor
     func reconfigureAnimateAction(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
-        print("\(#function)")
         Task {
             await context.coordinator.reconfigureWithAnimating(item: self.chatList)
             if self.chatList.count > 0 && !context.coordinator.isEmpty() && isScroll {

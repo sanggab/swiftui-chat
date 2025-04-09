@@ -24,7 +24,7 @@ struct GabChatDemoReducer {
         var isFocused: Bool = false
         var inputHeight: CGFloat = 0
     }
-    
+    @CasePathable
     enum Action {
         case onAppear
         case updateChatList([ChatModel])
@@ -37,6 +37,7 @@ struct GabChatDemoReducer {
         
         case reloadItem(ChatModel)
         
+        case reload(ChatModel)
         case test(ChatModel)
         
         case updateDiffableUpdateState(DiffableUpdateState<ChatModel>)
@@ -94,6 +95,13 @@ struct GabChatDemoReducer {
                 if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
                     state.chatList[matchIndex].chatType = .delete
                     state.diffableUpdateState = .reloadItemAnimate(true)
+                }
+                return .none
+                
+            case .reload(let chatModel):
+                if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
+                    state.chatList[matchIndex].chatType = .delete
+                    state.diffableUpdateState = .reload(true)
                 }
                 return .none
                 

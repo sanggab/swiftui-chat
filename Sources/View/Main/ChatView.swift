@@ -16,6 +16,7 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: ItemProtoc
     let chatList: [ChatModel]
     @Binding public var diffableUpdateState: DiffableUpdateState<ChatModel>
     
+    @State private var inputUpdateState: InputUpdateState = .waiting
     @State private var keyboardOption: KeyboardOption = .default
     
     @State private var inputHeight: CGFloat = 0
@@ -35,6 +36,7 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: ItemProtoc
         VStack(spacing: 0) {
             ChatCollectionView(chatList: self.chatList,
                                keyboardOption: self.$keyboardOption,
+                               inputUpdateState: self.$inputUpdateState,
                                diffableUpdateState: self.$diffableUpdateState,
                                inputHeight: self.inputHeight,
                                safeAreaInsetBottom: self.insetBottom,
@@ -55,9 +57,11 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: ItemProtoc
         }
         .onPreferenceChange(InputHeightKey.self) { self.inputHeight = $0 }
         .keyboardWillShow { option in
+            self.inputUpdateState = .keyboard
             self.keyboardOption = option
         }
         .keyboardWillHide { option in
+            self.inputUpdateState = .keyboard
             self.keyboardOption = option
         }
     }

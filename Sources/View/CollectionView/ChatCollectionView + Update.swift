@@ -136,7 +136,8 @@ extension ChatCollectionView {
     private func isConditionWithKeyboardHide(_ uiView: UICollectionView) {
         let moveOffsetY: CGFloat = self.computeMoveOffsetY(uiView)
         
-        self.executeAnimator(uiView, offsetY: moveOffsetY)
+//        self.executeAnimator(uiView, offsetY: moveOffsetY)
+        self.executeSetContentOffset(uiView, offset: moveOffsetY)
         
         DispatchQueue.main.async {
             self.inputUpdateState = .waiting

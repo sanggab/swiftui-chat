@@ -101,7 +101,7 @@ extension ChatCoordinator {
         
         snapShot.appendItems(item, toSection: .main)
         
-        await self.dataSource.apply(snapShot)
+        await self.dataSource.apply(consume snapShot)
     }
 }
 
@@ -157,28 +157,37 @@ extension ChatCoordinator {
 }
 
 extension ChatCoordinator {
+    /// UICollectionView을 전체 reload 합니다.
+    ///
+    /// 현재 snapShot에 있는 items들을 모두 삭제하고 새 item들을 추가한 다음 애니메이션 없이 reload를 합니다.
     public func reloadWithoutAnimate(item: [ChatModel]) async {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
-        let currentItem: [ChatModel] = snapShot.itemIdentifiers
+        snapShot.deleteItems(snapShot.itemIdentifiers)
+        snapShot.appendItems(item)
         
-        let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: consume item)
-        print("\(#function) remainItem: \(remainItem)")
+        snapShot.reloadItems(consume item)
         
-//        await self.dataSource.apply(snapShot, animatingDifferences: false)
+        await self.dataSource.apply(snapShot, animatingDifferences: false)
     }
-    
+    /// UICollectionView을 전체 reload 합니다.
+    ///
+    /// 현재 snapShot에 있는 items들을 모두 삭제하고 새 item들을 추가한 다음 애니메이션 있이 reload를 합니다.
     public func reloadWithAnimate(item: [ChatModel]) async {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
-        let currentItem: [ChatModel] = snapShot.itemIdentifiers
+        snapShot.deleteItems(snapShot.itemIdentifiers)
+        snapShot.appendItems(item)
         
-        let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: consume item)
-        print("\(#function) remainItem: \(remainItem)")
+        snapShot.reloadItems(consume item)
         
-//        await self.dataSource.apply(snapShot, animatingDifferences: true)
+        await self.dataSource.apply(snapShot, animatingDifferences: true)
     }
-    
+    /// snapShot의 Cell을 애니메이션 없이 reload
+    ///
+    /// 파라미터의 item하고 snapShot의 item을 비교해서  데이터가 달라진 item을 찾아 해당 Cell만 reloadItems을 애니메이션 없이 실행한다.
+    ///
+    /// > Warning: 만약 ChatModel이 Class 타입인 경우, 전체 item을 다 reload 시킵니다.
     public func reloadItemWithoutAnimate(item: [ChatModel]) async {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
@@ -198,7 +207,11 @@ extension ChatCoordinator {
             await self.dataSource.applySnapshotUsingReloadData(snapShot)
         }
     }
-    
+    /// snapShot의 Cell을 애니메이션 있이 reload
+    ///
+    /// 파라미터의 item하고 snapShot의 item을 비교해서  데이터가 달라진 item을 찾아 해당 Cell만 reloadItems을 애니메이션 있이 실행한다.
+    ///
+    /// > Warning: 만약 ChatModel이 Class 타입인 경우, 전체 item을 다 reload 시킵니다.
     public func reloadItemWithAnimate(item: [ChatModel]) async {
         var snapShot: NSDiffableDataSourceSnapshot<MockSection, ChatModel> = self.dataSource.snapshot()
         
@@ -242,7 +255,7 @@ extension ChatCoordinator {
             
             let remainItem: [ChatModel] = self.removeDuplicates(oldItem: consume currentItem, newItem: consume item)
             
-            snapShot.reconfigureItems(remainItem)
+            snapShot.reconfigureItems(consume remainItem)
             
             await self.dataSource.apply(snapShot)
         } else {
@@ -251,7 +264,7 @@ extension ChatCoordinator {
     }
     /// snapShot의 Cell을 애니메이션 없이 재구성
     ///
-    /// 파라미터의 item하고 snapShot의 item을 비교해서 id값이 일치하지만 데이터가 달라진 item을 찾아 해당 Cell만 reconfigureItem을 애니메이션 없이 실행한다.
+    /// 파라미터의 item하고 snapShot의 item을 비교해서 데이터가 달라진 item을 찾아 해당 Cell만 reconfigureItem을 애니메이션 없이 실행한다.
     ///
     /// > Warning: 만약 ChatModel이 Class 타입인 경우, 전체 item을 다 reload 시킵니다.
     @MainActor
@@ -276,7 +289,7 @@ extension ChatCoordinator {
     }
     /// snapShot의 Cell을 애니메이션 있이 재구성
     ///
-    /// 파라미터의 item하고 snapShot의 item을 비교해서 id값이 일치하지만 데이터가 달라진 item을 찾아 해당 Cell만 reconfigureItem을 애니메이션 있이 실행한다.
+    /// 파라미터의 item하고 snapShot의 item을 비교해서 데이터가 달라진 item을 찾아 해당 Cell만 reconfigureItem을 애니메이션 있이 실행한다.
     ///
     /// > Warning: 만약 ChatModel이 Class 타입인 경우, 전체 item을 다 reload 시킵니다.
     @MainActor

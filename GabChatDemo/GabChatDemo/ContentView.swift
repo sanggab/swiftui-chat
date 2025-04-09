@@ -55,6 +55,7 @@ struct ContentView: View {
                     }
                     .onTapGesture {
 //                        self.store.send(.reloadItem)
+                        isFocused = false
                     }
 
             }
@@ -72,9 +73,10 @@ struct ContentView: View {
                         ImageCell(urlString: current.imgUrl ?? "")
                             .clipped()
                             .onTapGesture {
-                                self.store.send(.reloadItem(current))
+//                                self.store.send(.reloadItem(current))
 //                                self.store.send(.reconfigureItem(current))
 //                                self.store.send(.test(current))
+                                self.store.send(.reload(current))
                             }
                     case .delete:
                         DeletedCell()
@@ -96,7 +98,6 @@ struct ContentView: View {
                             Text("메시지를 입력해주세요.")
                         }
                         .frame(height: inputHeight)
-                        .frame(height: 50)
                         .frame(maxWidth: .infinity)
                         .focused($isFocused)
                         .bind($store.isFocused.sending(\.updateIsFocused), to: $isFocused)
