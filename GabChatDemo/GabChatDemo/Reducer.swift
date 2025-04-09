@@ -18,7 +18,7 @@ struct GabChatDemoReducer {
     @ObservableState
     struct State {
         var chatList: [ChatModel] = []
-        var diffableUpdateState: DiffableUpdateState = .waiting
+        var diffableUpdateState: DiffableUpdateState<ChatModel> = .waiting
         
         var text: String = ""
         var isFocused: Bool = false
@@ -35,7 +35,9 @@ struct GabChatDemoReducer {
         case reloadItem
         case reconfigureItem(ChatModel)
         
-        case updateDiffableUpdateState(DiffableUpdateState)
+        case test(ChatModel)
+        
+        case updateDiffableUpdateState(DiffableUpdateState<ChatModel>)
         
         case updateText(String)
         case updateIsFocused(Bool)
@@ -47,7 +49,7 @@ struct GabChatDemoReducer {
             switch action {
             case .onAppear:
                 state.chatList = ChatModel.makeEmptyData()
-                state.diffableUpdateState = .onAppear(true)
+                state.diffableUpdateState = .onAppear(false)
                 return .none
                 
             case .updateChatList(let list):
@@ -81,7 +83,7 @@ struct GabChatDemoReducer {
                 if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
                     state.chatList[matchIndex].chatType = .delete
                     print("\(#function) state.chatList[matchIndex].chatType: \(state.chatList[matchIndex].id)")
-                    state.diffableUpdateState = .reloadItem(false)
+                    state.diffableUpdateState = .reconfigure(true)
                 }
                 
                 return .none
@@ -112,6 +114,10 @@ struct GabChatDemoReducer {
                 
             case .updateInputHeight(let height):
                 state.inputHeight = height
+                return .none
+                
+            case .test(let model):
+                state.diffableUpdateState = .hi(model)
                 return .none
             }
         }

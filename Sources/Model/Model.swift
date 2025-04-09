@@ -20,7 +20,7 @@ enum InputUpdateState: Equatable {
     case textInput
 }
 /// ChatView의 Cell을 업데이트 시킬 때, reload을 할 것 인가, 재구성을 할 것 인가 정하는 옵션.
-public enum DiffableUpdateState: Equatable {
+public enum DiffableUpdateState<ChatModel: Hashable>: Equatable {
     /// 최초 데이터 세팅 시
     ///
     /// > Note: snapShot에 데이터가 비어있을 경우에만 세팅을 하고 스크롤을 이동합니다.
@@ -58,4 +58,6 @@ public enum DiffableUpdateState: Equatable {
     /// Cell 재구성 시 애니메이션을 적용시킨다
     /// Bool값은 true일 경우 scrollToBottom 수행
     case reconfigureAnimate(Bool)
+    
+    case hi(ChatModel)
 }

@@ -19,13 +19,13 @@ public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UI
     @State var previousInputHeight: CGFloat = 0
     @State var previousKeyboardHeight: CGFloat = 0
     
-    @Binding var diffableUpdateState: DiffableUpdateState
+    @Binding var diffableUpdateState: DiffableUpdateState<ChatModel>
     let chatList: [ChatModel]
     
     public init(
         chatList: [ChatModel],
         keyboardOption: Binding<KeyboardOption>,
-        diffableUpdateState: Binding<DiffableUpdateState>,
+        diffableUpdateState: Binding<DiffableUpdateState<ChatModel>>,
         inputHeight: CGFloat,
         safeAreaInsetBottom: CGFloat,
         @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView) {
@@ -104,6 +104,8 @@ extension ChatCollectionView {
             self.reconfigureAction(uiView, context: context, isScroll: isScroll)
         case .reconfigureAnimate(let isScroll):
             self.reconfigureAnimateAction(uiView, context: context, isScroll: isScroll)
+        case .hi(let item):
+            print("상갑 logEvent \(#function) hi")
         }
     }
 }
@@ -123,7 +125,7 @@ extension ChatCollectionView {
     @MainActor
     func appendItem(_ uiView: UICollectionView, context: Context, isScroll: Bool) {
         Task {
-            let success: Bool = await context.coordinator.appendItem(item: self.chatList)
+            let success: Bool = await context.coordinator.appendItems(item: self.chatList)
             if self.chatList.count > 0 && !context.coordinator.isEmpty() && success && isScroll {
                 uiView.scrollToItem(at: IndexPath(item: self.chatList.count - 1, section: 0), at: .bottom, animated: true)
             }
