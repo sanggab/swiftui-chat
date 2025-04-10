@@ -10,6 +10,12 @@ import SwiftUI
 struct DateCell: View {
     let insDate: String
     
+    init(insDate: String) {
+        self.insDate = insDate
+        
+        print("상갑 logEvent \(#function) insDate")
+    }
+    
     var body: some View {
         HStack(spacing: 0) {
             Rectangle()

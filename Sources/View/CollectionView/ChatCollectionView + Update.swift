@@ -39,9 +39,10 @@ extension ChatCollectionView {
     @MainActor
     func textInputAction(_ uiView: UICollectionView) {
         if self.keyboardOption.state == .willHide || self.keyboardOption.state == .didHide {
-            DispatchQueue.main.async {
-                self.inputUpdateState = .keyboard
-            }
+            self.inputUpdateState = .keyboard
+//            DispatchQueue.main.async {
+//                self.inputUpdateState = .keyboard
+//            }
         }
         
         let keyboardCondition: Bool = self.isDifferenceKeyboardHeight()
@@ -58,10 +59,12 @@ extension ChatCollectionView {
             print("아무 처리 안한다")
         }
         
-        DispatchQueue.main.async {
-            self.previousKeyboardHeight = self.keyboardOption.size.height
-            self.previousInputHeight = self.inputHeight
-        }
+        self.previousKeyboardHeight = self.keyboardOption.size.height
+        self.previousInputHeight = self.inputHeight
+//        DispatchQueue.main.async {
+//            self.previousKeyboardHeight = self.keyboardOption.size.height
+//            self.previousInputHeight = self.inputHeight
+//        }
     }
     /// 키보드 높이가 달라졌을 때 처리하는 기능
     @MainActor
@@ -123,10 +126,12 @@ extension ChatCollectionView {
         // 키보드가 올라올 때, contentOffset.y의 값이 키보드의 높이만큼 안 떨어져 있을 경우에, 키보드가 올라올 경우, 예를 들어 현재 y값이 784인데 높이가 312인 키보드가 올라올 경우, 1096이 맨 아래의 좌표값인데 키보드 애니메이션 도중에 y의 값이1096까지 확장이 안 된 상태에서 1096으로 setContentOffset을 해버릴 경우, 도중에 스크롤이 멈추는 형상이 있어서 애니메이션을 다르게 가져갑니다.
         self.isNearBottom(uiView) ? self.executeSetContentOffset(uiView, offset: moveOffsetY) : self.executeAnimator(uiView, offsetY: moveOffsetY)
         
-        DispatchQueue.main.async {
-            self.inputUpdateState = .textInput
-            self.keyboardOption.state = .none
-        }
+        self.inputUpdateState = .textInput
+        self.keyboardOption.state = .none
+//        DispatchQueue.main.async {
+//            self.inputUpdateState = .textInput
+//            self.keyboardOption.state = .none
+//        }
     }
     
     /// Keyboard가 내려갈 때 처리를 하는 method
@@ -136,12 +141,14 @@ extension ChatCollectionView {
     private func isConditionWithKeyboardHide(_ uiView: UICollectionView) {
         let moveOffsetY: CGFloat = self.computeMoveOffsetY(uiView)
         
-//        self.executeAnimator(uiView, offsetY: moveOffsetY)
-        self.executeSetContentOffset(uiView, offset: moveOffsetY)
+        self.executeAnimator(uiView, offsetY: moveOffsetY)
+//        self.executeSetContentOffset(uiView, offset: moveOffsetY)
         
-        DispatchQueue.main.async {
-            self.inputUpdateState = .waiting
-            self.keyboardOption.state = .none
-        }
+        self.inputUpdateState = .waiting
+        self.keyboardOption.state = .none
+//        DispatchQueue.main.async {
+//            self.inputUpdateState = .waiting
+//            self.keyboardOption.state = .none
+//        }
     }
 }

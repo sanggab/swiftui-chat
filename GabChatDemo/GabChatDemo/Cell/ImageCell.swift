@@ -12,6 +12,11 @@ import Kingfisher
 struct ImageCell: View {
     let urlString: String
     
+    init(urlString: String) {
+        self.urlString = urlString
+        print("상갑 logEvent \(#function) ImageCell")
+    }
+    
     var body: some View {
         KFImage(URL(string: urlString))
             .resizable()

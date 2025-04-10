@@ -54,8 +54,12 @@ public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UI
     }
     
     public func updateUIView(_ uiView: UICollectionView, context: Context) {
-        self.conditionInputUpdateState(uiView, context: context)
-        self.conditionDiffableUpdateState(uiView, context: context)
+        DispatchQueue.main.async {
+            print("상갑 logEvent \(#function) inputUpdateState: \(self.inputUpdateState)")
+            print("상갑 logEvent \(#function) conditionDiffableUpdateState: \(self.diffableUpdateState)")
+            self.conditionInputUpdateState(uiView, context: context)
+            self.conditionDiffableUpdateState(uiView, context: context)
+        }
     }
     
     public func makeCoordinator() -> ChatCoordinator<ContentView, ChatModel> {
@@ -69,7 +73,7 @@ extension ChatCollectionView {
         if diffableUpdateState == .waiting {
             switch self.inputUpdateState {
             case .waiting:
-                print("상갑 logEvent \(#function) waiting")
+//                print("상갑 logEvent \(#function) waiting")
                 self.waitingAction()
             case .textInput:
                 self.textInputAction(uiView)
@@ -88,7 +92,8 @@ extension ChatCollectionView {
             case .onAppear(let isScroll):
                 self.diffableOnAppearAction(uiView, context: context, isScroll: isScroll)
             case .waiting:
-                print("상갑 logEvent \(#function) waiting")
+//                print("상갑 logEvent \(#function) waiting")
+                self.waitingAction()
             case .appendItem(let isScroll):
                 self.appendItem(uiView, context: context, isScroll: isScroll)
             case .reload(let isScroll):

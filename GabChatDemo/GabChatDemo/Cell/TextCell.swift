@@ -10,6 +10,11 @@ import SwiftUI
 struct TextCell: View {
     let text: String
     
+    init(text: String) {
+        self.text = text
+        print("상갑 logEvent \(#function) TextCell")
+    }
+    
     var body: some View {
         Text(text)
             .font(.headline)
