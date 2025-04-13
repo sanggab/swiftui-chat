@@ -55,8 +55,6 @@ public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UI
     
     public func updateUIView(_ uiView: UICollectionView, context: Context) {
         DispatchQueue.main.async {
-            print("상갑 logEvent \(#function) inputUpdateState: \(self.inputUpdateState)")
-            print("상갑 logEvent \(#function) conditionDiffableUpdateState: \(self.diffableUpdateState)")
             self.conditionInputUpdateState(uiView, context: context)
             self.conditionDiffableUpdateState(uiView, context: context)
         }

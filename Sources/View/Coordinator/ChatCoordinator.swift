@@ -80,7 +80,7 @@ public final class ChatCoordinator<ContentView: View, ChatModel: ItemProtocol>: 
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
+//        print("\(#function) y: \(scrollView.contentOffset.y)")
     }
 }
 

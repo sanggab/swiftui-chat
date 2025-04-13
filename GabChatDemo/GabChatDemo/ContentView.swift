@@ -79,7 +79,6 @@ struct ContentView: View {
                             }
                     case .img:
                         ImageCell(urlString: current.imgUrl ?? "")
-                            .clipped()
                             .onTapGesture {
 //                                self.store.send(.reloadItem(current))
                                 self.store.send(.reconfigureItem(current))
