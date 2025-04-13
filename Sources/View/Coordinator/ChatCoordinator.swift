@@ -20,12 +20,16 @@ public final class ChatCoordinator<ContentView: View, ChatModel: ItemProtocol>: 
     
     private var itemBuilder: (ItemBuilderClosure) -> ContentView
     
+    private var isRefresh: (() -> Void)?
+    
     private var dataSource: UICollectionViewDiffableDataSource<MockSection, ChatModel>!
     
     let isClassType: Bool
     
-    public init(itemBuilder: @escaping (ItemBuilderClosure) -> ContentView) {
+    public init(itemBuilder: @escaping (ItemBuilderClosure) -> ContentView,
+                isRefresh: (() -> Void)?) {
         self.itemBuilder = itemBuilder
+        self.isRefresh = isRefresh
         self.isClassType = ChatModel.self is AnyObject.Type
     }
     
@@ -61,7 +65,7 @@ public final class ChatCoordinator<ContentView: View, ChatModel: ItemProtocol>: 
             let beforeListModel: ChatModel? = self.beforeListModel(in: indexPath)
             
             cell.contentConfiguration = UIHostingConfiguration {
-                let _ = print("\(#function) indexPath: \(indexPath)")
+//                let _ = print("\(#function) indexPath: \(indexPath)")
                 self.itemBuilder((beforeListModel, ChatModel))
             }
             .minSize(width: 0, height: 0)
@@ -81,6 +85,13 @@ public final class ChatCoordinator<ContentView: View, ChatModel: ItemProtocol>: 
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
 //        print("\(#function) y: \(scrollView.contentOffset.y)")
+    }
+    
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if let isRefreshing = scrollView.refreshControl?.isRefreshing, isRefreshing {
+            self.isRefresh?()
+            scrollView.refreshControl?.endRefreshing()
+        }
     }
 }
 

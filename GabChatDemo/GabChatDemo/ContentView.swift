@@ -110,6 +110,9 @@ struct ContentView: View {
                         .bind($store.isFocused.sending(\.updateIsFocused), to: $isFocused)
                 }
             }
+            .detechRefresh {
+                print("\(#function)")
+            }
             .background(.mint)
 //            .onTapGesture {
 //                isFocused = false

@@ -14,7 +14,7 @@ struct ImageCell: View {
     
     init(urlString: String) {
         self.urlString = urlString
-        print("상갑 logEvent \(#function) ImageCell")
+//        print("상갑 logEvent \(#function) ImageCell")
     }
     
     var body: some View {

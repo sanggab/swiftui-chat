@@ -13,6 +13,8 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: ItemProtoc
     
     @ViewBuilder private let inputBuilderClosure: () -> InputView
     
+    private var isRefresh: (() -> Void)?
+    
     let chatList: [ChatModel]
     @Binding public var diffableUpdateState: DiffableUpdateState<ChatModel>
     
@@ -41,6 +43,9 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: ItemProtoc
                                inputHeight: self.inputHeight,
                                safeAreaInsetBottom: self.insetBottom,
                                itemBuilderClosure: self.itemBuilderClosure)
+            .detechRefresh {
+                isRefresh?()
+            }
             
             inputBuilderClosure()
                 .background {
@@ -64,5 +69,11 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: ItemProtoc
             self.inputUpdateState = .keyboard
             self.keyboardOption = option
         }
+    }
+    
+    public func detechRefresh(isRefresh: @escaping (() -> Void)) -> ChatView {
+        var view: ChatView = self
+        view.isRefresh = isRefresh
+        return view
     }
 }

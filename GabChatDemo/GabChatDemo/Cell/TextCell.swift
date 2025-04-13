@@ -12,7 +12,7 @@ struct TextCell: View {
     
     init(text: String) {
         self.text = text
-        print("상갑 logEvent \(#function) TextCell")
+//        print("상갑 logEvent \(#function) TextCell")
     }
     
     var body: some View {

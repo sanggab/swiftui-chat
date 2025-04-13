@@ -19,6 +19,8 @@ public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UI
     @State var previousInputHeight: CGFloat = 0
     @State var previousKeyboardHeight: CGFloat = 0
     
+    private var isRefresh: (() -> Void)?
+    
     @Binding var diffableUpdateState: DiffableUpdateState<ChatModel>
     let chatList: [ChatModel]
     
@@ -47,6 +49,7 @@ public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UI
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = context.coordinator
         
+        collectionView.refreshControl = UIRefreshControl()
         context.coordinator.setDataSource(view: collectionView)
 //        context.coordinator.setData(item: self.chatList)
         
@@ -61,7 +64,14 @@ public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UI
     }
     
     public func makeCoordinator() -> ChatCoordinator<ContentView, ChatModel> {
-        return ChatCoordinator(itemBuilder: self.itemBuilderClosure)
+        return ChatCoordinator(itemBuilder: self.itemBuilderClosure,
+                               isRefresh: isRefresh)
+    }
+    
+    public func detechRefresh(isRefresh: @escaping (() -> Void)) -> ChatCollectionView {
+        var view: ChatCollectionView = self
+        view.isRefresh = isRefresh
+        return view
     }
 }
 
