@@ -32,6 +32,7 @@
 				Model/Model.swift,
 				Model/PreferenceKey.swift,
 				Utils/Keyboard.swift,
+				View/CollectionView/AsyncAction.swift,
 				"View/CollectionView/ChatCollectionView + Animation.swift",
 				"View/CollectionView/ChatCollectionView + Helper.swift",
 				"View/CollectionView/ChatCollectionView + Update.swift",
