@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-public protocol ItemProtocol: Hashable, Identifiable {
-    
-}
+public protocol ItemProtocol: Hashable, Identifiable, Sendable { }
 
 /// ChatCoordinator
 ///

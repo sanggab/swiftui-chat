@@ -48,6 +48,7 @@ extension KeyboardOption {
     /// ``KeyboardOption/curve`` 와 ``KeyboardOption/duration``을 이용해서 Animation을 만듭니다.
     ///
     /// - returns: Animation
+    @MainActor
     public func makingCurveAnimation() -> Animation {
         let uikitCurve: UIView.AnimationCurve! = .init(rawValue: curve)
         
