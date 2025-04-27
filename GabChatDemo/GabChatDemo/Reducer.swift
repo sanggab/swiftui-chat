@@ -84,7 +84,6 @@ struct GabChatDemoReducer {
             case .deleteChat(let chatModel):
                 if let matchIndex: Array<ChatModel>.Index = state.chatList.firstIndex(of: chatModel) {
                     state.chatList[matchIndex].chatType = .delete
-                    print("\(#function) state.chatList[matchIndex].chatType: \(state.chatList[matchIndex].id)")
                     state.diffableUpdateState = .reconfigure(isScroll: false)
                 }
                 

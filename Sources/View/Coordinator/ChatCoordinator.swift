@@ -63,7 +63,6 @@ public final class ChatCoordinator<ContentView: View, ChatModel: ItemProtocol>: 
             let beforeListModel: ChatModel? = self.beforeListModel(in: indexPath)
             
             cell.contentConfiguration = UIHostingConfiguration {
-//                let _ = print("\(#function) indexPath: \(indexPath)")
                 self.itemBuilder((beforeListModel, ChatModel))
             }
             .minSize(width: 0, height: 0)
@@ -77,12 +76,8 @@ public final class ChatCoordinator<ContentView: View, ChatModel: ItemProtocol>: 
         return self.dataSource.snapshot().itemIdentifiers[safe: index.item - 1]
     }
     
-    public func check() {
-        print("\(#function) self.dataSource.snapshot().itemIdentifiers: \(self.dataSource.snapshot().itemIdentifiers)")
-    }
-    
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        print("\(#function) y: \(scrollView.contentOffset.y)")
+        
     }
     
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

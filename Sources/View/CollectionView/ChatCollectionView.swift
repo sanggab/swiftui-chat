@@ -81,7 +81,6 @@ extension ChatCollectionView {
         if diffableUpdateState == .waiting {
             switch self.inputUpdateState {
             case .waiting:
-//                print("상갑 logEvent \(#function) waiting")
                 self.waitingAction()
             case .textInput:
                 self.textInputAction(uiView)
@@ -100,7 +99,6 @@ extension ChatCollectionView {
             case .onAppear(let isScroll):
                 self.diffableOnAppearAction(uiView, context: context, isScroll: isScroll)
             case .waiting:
-//                print("상갑 logEvent \(#function) waiting")
                 self.waitingAction()
             case .appendItem(let isScroll):
                 self.appendItem(uiView, context: context, isScroll: isScroll)
@@ -116,8 +114,6 @@ extension ChatCollectionView {
                 self.reconfigureAction(uiView, context: context, isScroll: isScroll)
             case .reconfigureAnimate(let isScroll):
                 self.reconfigureAnimateAction(uiView, context: context, isScroll: isScroll)
-            default:
-                break
             }
         }
         

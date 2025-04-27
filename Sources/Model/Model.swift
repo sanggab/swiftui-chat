@@ -67,9 +67,4 @@ public enum DiffableUpdateState<ChatModel: Hashable>: Equatable {
     /// Cell 재구성 시 애니메이션을 적용시킨다
     /// isScroll값은 true일 경우 scrollToBottom 수행
     case reconfigureAnimate(isScroll: Bool)
-    
-    case specificReload(chatModel: ChatModel, isScroll: Bool)
-    case specificReloadAnimate(chatModel: ChatModel, isScroll: Bool)
-    case specificReconfigure(chatModel: ChatModel, isScroll: Bool)
-    case specificReconfigureAnimate(chatModel: ChatModel, isScroll: Bool)
 }

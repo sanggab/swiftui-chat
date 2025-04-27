@@ -12,8 +12,6 @@ struct DateCell: View {
     
     init(insDate: String) {
         self.insDate = insDate
-        
-//        print("상갑 logEvent \(#function) insDate")
     }
     
     var body: some View {

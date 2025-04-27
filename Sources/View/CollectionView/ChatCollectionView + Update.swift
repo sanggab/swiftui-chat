@@ -54,9 +54,9 @@ extension ChatCollectionView {
         case (false, true):
             self.isConditionWithDifferenceInputHeight(uiView)
         case (true, true):
-            print("존재할 수 있나 모르겠네..")
+            fatalError("keyboardCondition and inputHeightCondition is true at the same time.")
         case (false, false):
-            print("아무 처리 안한다")
+            fatalError("keyboardCondition and inputHeightCondition is false at the same time.")
         }
         
         self.previousKeyboardHeight = self.keyboardOption.size.height
@@ -100,18 +100,11 @@ extension ChatCollectionView {
     @MainActor
     func controlOffsetWithKeyboard(_ uiView: UICollectionView) {
         switch self.keyboardOption.state {
-        case .willShow:
-            self.isConditionWithKeyboardShow(uiView)
-        case .willHide:
-            self.isConditionWithKeyboardHide(uiView)
-        case .didShow:
-            print("didShow")
-        case .didHide:
-            print("didHide")
-        case .none:
-            print("아무 처리 안함")
-            print("상갑 logEvent \(#function) frame: \(uiView.frame)")
-            break
+        case .willShow: self.isConditionWithKeyboardShow(uiView)
+        case .willHide: self.isConditionWithKeyboardHide(uiView)
+        case .didShow: fallthrough
+        case .didHide: fallthrough
+        case .none: break
         }
     }
     /// Keyboard가 올라올 때 처리를 하는 method
@@ -128,10 +121,6 @@ extension ChatCollectionView {
         
         self.inputUpdateState = .textInput
         self.keyboardOption.state = .none
-//        DispatchQueue.main.async {
-//            self.inputUpdateState = .textInput
-//            self.keyboardOption.state = .none
-//        }
     }
     
     /// Keyboard가 내려갈 때 처리를 하는 method

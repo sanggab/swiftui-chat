@@ -24,7 +24,6 @@ struct ContentView: View {
     }
     
     var body: some View {
-        let _ = Self._printChanges()
         WithPerceptionTracking {
             HStack {
                 Rectangle()
@@ -111,7 +110,7 @@ struct ContentView: View {
                 }
             }
             .detechRefresh {
-                print("\(#function)")
+                
             }
             .background(.mint)
 //            .onTapGesture {
