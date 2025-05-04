@@ -101,4 +101,134 @@ diffableDataSource에 어떤 방식으로 업데이트를 시킬 지 결정하�
 
 
 <a name="onappear"></a>
-### onAppear(isScroll: Bool)
+## onAppear(isScroll: Bool)
+
+채팅 화면을 보여주고 싶을 때 최초에 한 번 `무조건` 콜을 해야하는 옵션입니다.  
+기본적으로 snapShot에는 section이 비어있기 때문에, 빈 section에 item을 추가할 경우 crash가 발생합니다.
+
+<br>
+
+> [!Note]
+> snapShot에 데이터가 비어있을 경우에만 세팅을 하고 스크롤을 이동합니다.
+> 만약 데이터가 존재 하는 데 onAppear시에는 아무 작동을 안합니다.
+
+<br>
+
+<a name="waiting"></a>
+## waiting
+
+모든 작동을 다 수행한 후 대기중인 상태를 의미합니다.
+
+
+<br>
+
+<a name="appendItem"></a>
+## appendItem(isScroll: Bool)
+
+채팅 데이터가 추가할 때 사용하는 옵션입니다.
+
+<br>
+
+> [!Note]
+> 만약 추가한 채팅이 기존 채팅하고 비교할 때, 새로운 채팅 데이터가 존재하지 않으면
+> 아무런 작동을 수행하지 않고 스크롤을 수행하지 않습니다.
+
+<br>
+
+<a name="reload"></a>
+## reload(isScroll: Bool)
+
+snapShot의 item을 다 삭제하고 현재 item들로 세팅한다음 reload를 해줍니다.
+
+
+<br>
+
+<a name="reloadAnimate"></a>
+## reloadAnimate(isScroll: Bool)
+
+snapShot의 item을 다 삭제하고 현재 item들로 세팅한다음 reload를 애니메이션과 함께 적용합니다.
+
+
+<br>
+
+<a name="reloadItem"></a>
+## reloadItem(isScroll: Bool)
+
+채팅 데이터와 snapShot의 item을 비교해서 데이터가 달라진 item을 찾아 해당 Cell만 reload를 애니메이션 없이 적용합니다.
+
+<br>
+
+> [!Warning]
+> 채팅 모델 타입이 struct일 때 변하고자 하는 Item만 reload를 진행합니다.
+> class일 경우 reload 옵션이 적용됩니다.
+
+<br>
+
+<a name="reloadItemAnimate"></a>
+## reloadItemAnimate(isScroll: Bool)
+
+채팅 데이터와 snapShot의 item을 비교해서 데이터가 달라진 item을 찾아 해당 Cell만 reload를 애니메이션과 함께 적용합니다.
+
+<br>
+
+> [!Warning]
+> 채팅 모델 타입이 struct일 때 변하고자 하는 Item만 reload를 진행합니다.
+> class일 경우 reloadAnimate 옵션이 적용됩니다.
+
+
+<br>
+
+<a name="reconfigure"></a>
+## reconfigure(isScroll: Bool)
+
+채팅 데이터와 snapShot의 item을 비교해서 데이터가 달라진 item을 찾아 해당 Cell만 reconfigure을 애니메이션 없이 적용합니다.  
+
+<br>
+
+> [!Warning]
+> 만약 ChatModel이 Class 타입인 경우, 전체 item을 다 reload 시킵니다.
+
+<br>
+
+<a name="reconfigureAnimate"></a>
+## reconfigureAnimate(isScroll: Bool)
+
+채팅 데이터와 snapShot의 item을 비교해서 데이터가 달라진 item을 찾아 해당 Cell만 reconfigure을 애니메이션과 함께 적용합니다.
+
+<br>
+
+> [!Warning]
+> 만약 ChatModel이 Class 타입인 경우, 전체 item을 다 reload 시킵니다.
+
+
+<br>
+
+
+<a name="itemBuilderClosure"></a>
+## ItemBuilderClosure
+
+채팅창에서 채팅 타입에 따라 Cell을 다르게 그려야만 합니다. 일반적으로 ForEach를 돌려서 내가 관리하고 있는 채팅 리스트의 indexPath에 맞는 데이터를 뽑아서 UI를 그립니다.  
+
+그래서 ItemBuilderClosure도 datasource에 indexPath에 맞는 item과 날짜 구분선의 케이스를 생각해서 해당 index의 이전 item을 같이 던져줍니다.
+
+> [!Note]
+> before는 indexPath가 0,0일 경우 이전 indexPath가 존재하지 않기 때문에 옵셔널로 던져줍니다.
+
+<br>
+
+
+<a name="inputBuilderClosure"></a>
+## InputBuilderClosure
+
+채팅창에서 Input창은 빠질 수 없는 요소입니다. 하지만 Input창의 높이 변경에 따라 채팅의 scroll 포지션을 변경해주는 것은 번거롭습니다.  
+
+그래서 InputBuilderClosure에 내가 구현하고자 하는 Input창을 구현하면, 내부적으로 Input창의 높이 변화, 입력 상태, 키보드 변화를 감지해서 알맞게 채팅의 scroll 포지션을 변경해줍니다!  
+
+> [!Note]
+> 현재 채팅의 scroll 포지션에 따라 Input이 활성화 / 비활성화시에 키보드 애니메이션이 다르게 적용될 수 있습니다.
+> 그 이유는 키보드가 올라갈 떄, 현재 contentOffset.y의 값이 키보드의 높이만큼 늘어난 상태가 아닌 상태여서 그대로 스크롤 포지션을 이동할 경우, 어정쩡하게 이동하는 현상이 있습니다.
+> 그래서 저런 케이스 경우에는 애니메이션을 다르게 적용할 수 밖에 없었습니다.
+
+
+
+<br>
