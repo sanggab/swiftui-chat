@@ -49,13 +49,13 @@ ChatView는 UICollectionView와 UICollectionViewDiffableDataSource를 활용해�
 ```swift
 import GabChat
 
-@State private var chatList: [Hashable & Identifiable] = []
-@State private var diffableUpdateState: DiffableUpdateState<Hashable & Identifiable> = .waiting
+@State private var chatList: [Hashable & Identifiable & Sendable] = []
+@State private var diffableUpdateState: DiffableUpdateState<Hashable & Identifiable & Sendable> = .waiting
     
     var body: some View {
-        ChatView(chatList: <#T##[Hashable & Identifiable]#>,
-                 diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
-                 itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
+        ChatView(chatList: <#T##[Hashable & Identifiable & Sendable]#>,
+                 diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable & Sendable>>#>,
+                 itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable & Sendable>.ItemBuilderClosure) -> View#>,
                  inputBuilderClosure: <#T##() -> View#>)
     }
 ```
