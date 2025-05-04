@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ChatView<ContentView: View, InputView: View, ChatModel: Hashable & Identifiable>: View {
+public struct ChatView<ContentView: View, InputView: View, ChatModel: Hashable & Identifiable & Sendable>: View {
     
     @ViewBuilder private let itemBuilderClosure: (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView
     

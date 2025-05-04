@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ChatCollectionView<ContentView: View, ChatModel: Hashable & Identifiable>: UIViewRepresentable {
+public struct ChatCollectionView<ContentView: View, ChatModel: Hashable & Identifiable & Sendable>: UIViewRepresentable {
     
     @ViewBuilder let itemBuilderClosure: (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView
     
