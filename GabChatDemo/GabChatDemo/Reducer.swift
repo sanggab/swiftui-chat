@@ -18,7 +18,7 @@ struct GabChatDemoReducer {
     @ObservableState
     struct State {
         var chatList: [ChatModel] = []
-        var diffableUpdateState: DiffableUpdateState<ChatModel> = .waiting
+        var diffableUpdateState: DiffableUpdateState = .waiting
         
         var text: String = ""
         var isFocused: Bool = false
@@ -39,7 +39,7 @@ struct GabChatDemoReducer {
         
         case reload(ChatModel)
         
-        case updateDiffableUpdateState(DiffableUpdateState<ChatModel>)
+        case updateDiffableUpdateState(DiffableUpdateState)
         
         case updateText(String)
         case updateIsFocused(Bool)

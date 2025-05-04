@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UIViewRepresentable {
+public struct ChatCollectionView<ContentView: View, ChatModel: Hashable & Identifiable>: UIViewRepresentable {
     
     @ViewBuilder let itemBuilderClosure: (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView
     
@@ -21,14 +21,14 @@ public struct ChatCollectionView<ContentView: View, ChatModel: ItemProtocol>: UI
     
     private var isRefresh: (() -> Void)?
     
-    @Binding var diffableUpdateState: DiffableUpdateState<ChatModel>
+    @Binding var diffableUpdateState: DiffableUpdateState
     let chatList: [ChatModel]
     
     public init(
         chatList: [ChatModel],
         keyboardOption: Binding<KeyboardOption>,
         inputUpdateState: Binding<InputUpdateState>,
-        diffableUpdateState: Binding<DiffableUpdateState<ChatModel>>,
+        diffableUpdateState: Binding<DiffableUpdateState>,
         inputHeight: CGFloat,
         safeAreaInsetBottom: CGFloat,
         @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView) {

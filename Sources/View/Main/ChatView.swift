@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ChatView<ContentView: View, InputView: View, ChatModel: ItemProtocol>: View {
+public struct ChatView<ContentView: View, InputView: View, ChatModel: Hashable & Identifiable>: View {
     
     @ViewBuilder private let itemBuilderClosure: (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView
     
@@ -16,7 +16,7 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: ItemProtoc
     private var isRefresh: (() -> Void)?
     
     let chatList: [ChatModel]
-    @Binding public var diffableUpdateState: DiffableUpdateState<ChatModel>
+    @Binding public var diffableUpdateState: DiffableUpdateState
     
     @State private var inputUpdateState: InputUpdateState = .waiting
     @State private var keyboardOption: KeyboardOption = .default
@@ -25,7 +25,7 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: ItemProtoc
     @State private var insetBottom: CGFloat = 0
     
     public init(chatList: [ChatModel],
-                diffableUpdateState: Binding<DiffableUpdateState<ChatModel>>,
+                diffableUpdateState: Binding<DiffableUpdateState>,
                 @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView,
                 @ViewBuilder inputBuilderClosure: @escaping () -> InputView) {
         self.chatList = chatList

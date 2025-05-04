@@ -7,12 +7,10 @@
 
 import SwiftUI
 
-public protocol ItemProtocol: Hashable, Identifiable, Sendable { }
-
 /// ChatCoordinator
 ///
 /// UICollectionView와 관련된 요소(ex: delegate)를 처리하는 class
-public final class ChatCoordinator<ContentView: View, ChatModel: ItemProtocol>: NSObject, UICollectionViewDelegate {
+public final class ChatCoordinator<ContentView: View, ChatModel: Hashable & Identifiable>: NSObject, UICollectionViewDelegate {
     
     public typealias ItemBuilderClosure = (before: ChatModel?, current: ChatModel)
     
@@ -22,7 +20,7 @@ public final class ChatCoordinator<ContentView: View, ChatModel: ItemProtocol>: 
     
     private var dataSource: UICollectionViewDiffableDataSource<MockSection, ChatModel>!
     
-    let isClassType: Bool
+    private let isClassType: Bool
     
     public init(itemBuilder: @escaping (ItemBuilderClosure) -> ContentView,
                 isRefresh: (() -> Void)?) {

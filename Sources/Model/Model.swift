@@ -20,7 +20,7 @@ public enum InputUpdateState: Equatable {
     case textInput
 }
 /// ChatView의 Cell을 업데이트 시킬 때, reload을 할 것 인가, 재구성을 할 것 인가 정하는 옵션.
-public enum DiffableUpdateState<ChatModel: Hashable>: Equatable {
+public enum DiffableUpdateState: Equatable {
     /// 최초 데이터 세팅 시
     ///
     /// View가 onAppear일 때 최초에 한 번 snapShot의 section에 데이터를 세팅합니다.
