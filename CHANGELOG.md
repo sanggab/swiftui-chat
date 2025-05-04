@@ -2,6 +2,12 @@
 
 ---
 
+## [1.1 - Fix README](https://github.com/sanggab/swiftui-chat/releases/tag/1.1) (2025-05-04)
+### Fix
+* README 파일의 잘못된 설명을 수정했습니다.
+
+---
+
 ## [1.0 - swiftui-Chat](https://github.com/sanggab/swiftui-chat/releases/tag/1.0) (2025-05-04)
 ### Release 
 * SwiftUI버전 채팅 프레임워크를 소개합니다!
