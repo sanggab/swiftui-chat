@@ -34,27 +34,31 @@ public enum DiffableUpdateState: Equatable {
     /// 채팅 추가
     ///
     /// Bool값은 ture일 경우 scrollToBottom 수행
-    /// /// isScroll값은 true일 경우 scrollToBottom 수행
+    /// isScroll값은 true일 경우 scrollToBottom 수행
     /// > Note: 만약 추가한 채팅이 기존 채팅하고 비교할 때, 새로운 채팅 데이터가 존재하지 않으면
     /// 아무런 작동을 수행하지 않고 스크롤을 수행하지 않습니다.
     case appendItem(isScroll: Bool)
     /// CollectionView 전체 reload
     ///
     /// snapShot의 item을 다 삭제하고 현재 item들로 세팅한다음 reload를 해줍니다.
-    /// /// isScroll값은 true일 경우 scrollToBottom 수행
+    /// isScroll값은 true일 경우 scrollToBottom 수행
     case reload(isScroll: Bool)
     /// CollectionView 전체 reload
+    ///
+    /// Cell reload 시 애니메이션을 적용시킨다
+    /// snapShot의 item을 다 삭제하고 현재 item들로 세팅한다음 reload를 해줍니다.
+    /// isScroll값은 true일 경우 scrollToBottom 수행
     case reloadAnimate(isScroll: Bool)
     /// Cell Item 리로드
     ///
     /// Cell reload 시 애니메이션을 적용 안 한다
-    /// /// isScroll값은 true일 경우 scrollToBottom 수행
+    /// isScroll값은 true일 경우 scrollToBottom 수행
     /// > Warning: 채팅 모델 타입이 struct일 때 변하고자 하는 Item만 reload를 진행합니다.
     case reloadItem(isScroll: Bool)
     /// cell Item 리로드
     ///
     /// Cell reload 시 애니메이션을 적용시킨다
-    /// /// isScroll값은 true일 경우 scrollToBottom 수행
+    /// isScroll값은 true일 경우 scrollToBottom 수행
     /// > Warning: 채팅 모델 타입이 struct일 때 변하고자 하는 Item만 reload를 진행합니다.
     case reloadItemAnimate(isScroll: Bool)
     /// Cell 재구성
