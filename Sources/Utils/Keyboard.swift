@@ -101,6 +101,8 @@ public extension KeyboardState {
 ///
 /// Keyboard의 willShow, didShow, willHide, didHide의 변화에 따라 ``KeyboardOption`` 으로 키보드의 데이터를 알려주는 modifier
 public struct KeyboardModifier: ViewModifier {
+    @Environment(\.scenePhase) var scenePhase
+    
     private let keyboardWillShow = NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
         .compactMap(\.userInfo)
     
@@ -118,6 +120,8 @@ public struct KeyboardModifier: ViewModifier {
     private let didShow: ((KeyboardOption) -> Void)?
     private let didHide: ((KeyboardOption) -> Void)?
     
+    @State private var previousScenePhase: ScenePhase = .active
+    
     public init(willShow: ((KeyboardOption) -> Void)? = nil,
          willHide: ((KeyboardOption) -> Void)? = nil,
          didShow: ((KeyboardOption) -> Void)? = nil,
@@ -131,54 +135,62 @@ public struct KeyboardModifier: ViewModifier {
     public func body(content: Content) -> some View {
         content
             .onReceive(keyboardWillShow) { userInfo in
-                let size: CGSize = (userInfo["UIKeyboardFrameEndUserInfoKey"] as? CGRect)?.size ?? .zero
-                let curve: Int = (userInfo["UIKeyboardAnimationCurveUserInfoKey"] as? Int) ?? .zero
-                let duration: TimeInterval = (userInfo["UIKeyboardAnimationDurationUserInfoKey"] as? TimeInterval) ?? .zero
-                
-                let keyboardOption: KeyboardOption = self.makeKeyboardOption(size: size,
-                                                                             curve: curve,
-                                                                             duration: duration,
-                                                                             state: .willShow)
-                
-                self.willShow?(keyboardOption)
+                if scenePhase == .active {
+                    let size: CGSize = (userInfo["UIKeyboardFrameEndUserInfoKey"] as? CGRect)?.size ?? .zero
+                    let curve: Int = (userInfo["UIKeyboardAnimationCurveUserInfoKey"] as? Int) ?? .zero
+                    let duration: TimeInterval = (userInfo["UIKeyboardAnimationDurationUserInfoKey"] as? TimeInterval) ?? .zero
+                    
+                    let keyboardOption: KeyboardOption = self.makeKeyboardOption(size: size,
+                                                                                 curve: curve,
+                                                                                 duration: duration,
+                                                                                 state: .willShow)
+                    
+                    self.willShow?(keyboardOption)
+                }
             }
             .onReceive(keyboardDidShow) { userInfo in
-                let size: CGSize = (userInfo["UIKeyboardFrameEndUserInfoKey"] as? CGRect)?.size ?? .zero
-                let curve: Int = (userInfo["UIKeyboardAnimationCurveUserInfoKey"] as? Int) ?? .zero
-                let duration: TimeInterval = (userInfo["UIKeyboardAnimationDurationUserInfoKey"] as? TimeInterval) ?? .zero
-                
-                let keyboardOption: KeyboardOption = self.makeKeyboardOption(size: size,
-                                                                             curve: curve,
-                                                                             duration: duration,
-                                                                             state: .didShow)
-                
-                self.didShow?(keyboardOption)
+                if scenePhase == .active {
+                    let size: CGSize = (userInfo["UIKeyboardFrameEndUserInfoKey"] as? CGRect)?.size ?? .zero
+                    let curve: Int = (userInfo["UIKeyboardAnimationCurveUserInfoKey"] as? Int) ?? .zero
+                    let duration: TimeInterval = (userInfo["UIKeyboardAnimationDurationUserInfoKey"] as? TimeInterval) ?? .zero
+                    
+                    let keyboardOption: KeyboardOption = self.makeKeyboardOption(size: size,
+                                                                                 curve: curve,
+                                                                                 duration: duration,
+                                                                                 state: .didShow)
+                    
+                    self.didShow?(keyboardOption)
+                }
             }
             .onReceive(keyboardWillHide) { userInfo in
-                let size: CGSize = (userInfo["UIKeyboardFrameEndUserInfoKey"] as? CGRect)?.size ?? .zero
-                
-                let curve: Int = (userInfo["UIKeyboardAnimationCurveUserInfoKey"] as? Int) ?? .zero
-                let duration: TimeInterval = (userInfo["UIKeyboardAnimationDurationUserInfoKey"] as? TimeInterval) ?? .zero
-                
-                let keyboardOption: KeyboardOption = self.makeKeyboardOption(size: size,
-                                                                             curve: curve,
-                                                                             duration: duration,
-                                                                             state: .willHide)
-                
-                self.willHide?(keyboardOption)
+                if scenePhase == .active {
+                    let size: CGSize = (userInfo["UIKeyboardFrameEndUserInfoKey"] as? CGRect)?.size ?? .zero
+                    
+                    let curve: Int = (userInfo["UIKeyboardAnimationCurveUserInfoKey"] as? Int) ?? .zero
+                    let duration: TimeInterval = (userInfo["UIKeyboardAnimationDurationUserInfoKey"] as? TimeInterval) ?? .zero
+                    
+                    let keyboardOption: KeyboardOption = self.makeKeyboardOption(size: size,
+                                                                                 curve: curve,
+                                                                                 duration: duration,
+                                                                                 state: .willHide)
+                    
+                    self.willHide?(keyboardOption)
+                }
             }
             .onReceive(keyboardDidHide) { userInfo in
-                let size: CGSize = (userInfo["UIKeyboardFrameEndUserInfoKey"] as? CGRect)?.size ?? .zero
-                
-                let curve: Int = (userInfo["UIKeyboardAnimationCurveUserInfoKey"] as? Int) ?? .zero
-                let duration: TimeInterval = (userInfo["UIKeyboardAnimationDurationUserInfoKey"] as? TimeInterval) ?? .zero
-                
-                let keyboardOption: KeyboardOption = self.makeKeyboardOption(size: size,
-                                                                             curve: curve,
-                                                                             duration: duration,
-                                                                             state: .didHide)
-                
-                self.didHide?(keyboardOption)
+                if scenePhase == .active {
+                    let size: CGSize = (userInfo["UIKeyboardFrameEndUserInfoKey"] as? CGRect)?.size ?? .zero
+                    
+                    let curve: Int = (userInfo["UIKeyboardAnimationCurveUserInfoKey"] as? Int) ?? .zero
+                    let duration: TimeInterval = (userInfo["UIKeyboardAnimationDurationUserInfoKey"] as? TimeInterval) ?? .zero
+                    
+                    let keyboardOption: KeyboardOption = self.makeKeyboardOption(size: size,
+                                                                                 curve: curve,
+                                                                                 duration: duration,
+                                                                                 state: .didHide)
+                    
+                    self.didHide?(keyboardOption)
+                }
             }
     }
     

@@ -7,37 +7,42 @@
 
 import SwiftUI
 
-public struct ChatCollectionView<ContentView: View, ChatModel: Hashable & Identifiable & Sendable>: UIViewRepresentable {
+public struct ChatCollectionView<ContentView: View, ChatModel: Hashable & Identifiable>: UIViewRepresentable {
     
     @ViewBuilder let itemBuilderClosure: (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView
     
     @Binding var keyboardOption: KeyboardOption
     let inputHeight: CGFloat
     let safeAreaInsetBottom: CGFloat
+    let threshold: CGFloat
+    var backgroundColor: Color = .white
     
     @Binding var inputUpdateState: InputUpdateState
     @State var previousInputHeight: CGFloat = 0
     @State var previousKeyboardHeight: CGFloat = 0
     
     private var isRefresh: (() -> Void)?
+    private var onScrollBeyondThreshold: ((Bool) -> Void)?
     
     @Binding var diffableUpdateState: DiffableUpdateState
-    let chatList: [ChatModel]
+    @Binding var chatList: [ChatModel]
     
     public init(
-        chatList: [ChatModel],
+        chatList: Binding<[ChatModel]>,
         keyboardOption: Binding<KeyboardOption>,
         inputUpdateState: Binding<InputUpdateState>,
         diffableUpdateState: Binding<DiffableUpdateState>,
         inputHeight: CGFloat,
         safeAreaInsetBottom: CGFloat,
+        threshold: CGFloat = 100,
         @ViewBuilder itemBuilderClosure: @escaping (ChatCoordinator<ContentView, ChatModel>.ItemBuilderClosure) -> ContentView) {
             self._keyboardOption = keyboardOption
             self._inputUpdateState = inputUpdateState
             self._diffableUpdateState = diffableUpdateState
             self.inputHeight = inputHeight
             self.safeAreaInsetBottom = safeAreaInsetBottom
-            self.chatList = chatList
+            self._chatList = chatList
+            self.threshold = threshold
             self.itemBuilderClosure = itemBuilderClosure
         }
     
@@ -48,10 +53,10 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable & Identi
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "chatcell")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = context.coordinator
+        collectionView.backgroundColor = UIColor(backgroundColor)
         
         collectionView.refreshControl = UIRefreshControl()
         context.coordinator.setDataSource(view: collectionView)
-//        context.coordinator.setData(item: self.chatList)
         
         return collectionView
     }
@@ -64,13 +69,31 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable & Identi
     }
     
     public func makeCoordinator() -> ChatCoordinator<ContentView, ChatModel> {
-        return ChatCoordinator(itemBuilder: self.itemBuilderClosure,
-                               isRefresh: isRefresh)
+        return ChatCoordinator(
+            itemBuilder: self.itemBuilderClosure,
+            isRefresh: isRefresh,
+            onScrollBeyondThreshold: onScrollBeyondThreshold,
+            chatList: $chatList,
+            threshold: threshold
+        )
+
     }
     
     public func detechRefresh(isRefresh: @escaping (() -> Void)) -> ChatCollectionView {
         var view: ChatCollectionView = self
         view.isRefresh = isRefresh
+        return view
+    }
+    
+    public func onScrollBeyondThreshold(_ threshold: @escaping ((Bool) -> Void)) -> ChatCollectionView {
+        var view: ChatCollectionView = self
+        view.onScrollBeyondThreshold = threshold
+        return view
+    }
+    
+    public func backgroundColor(color: Color) -> ChatCollectionView {
+        var view: ChatCollectionView = self
+        view.backgroundColor = color
         return view
     }
 }

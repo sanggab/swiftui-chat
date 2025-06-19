@@ -59,8 +59,8 @@ struct ContentView: View {
 
             }
             
-            ChatView(chatList: store.chatList,
-                     diffableUpdateState: $store.diffableUpdateState.sending(\.updateDiffableUpdateState)) { (before: ChatModel?, current: ChatModel) in
+            ChatView(chatList: $store.chatList.sending(\.updateChatList),
+                     diffableUpdateState: $store.diffableUpdateState.sending(\.updateDiffableUpdateState)) { (before: ChatModel?, current: ChatModel, after: ChatModel?) in
                 WithPerceptionTracking {
                     let previousDate: String = before?.insDate.makeLocaleDate() ?? ""
                     let currentDate: String = current.insDate.makeLocaleDate()
@@ -112,6 +112,7 @@ struct ContentView: View {
             .detechRefresh {
                 
             }
+//            .backgroundColor(color: .white)
             .background(.mint)
 //            .onTapGesture {
 //                isFocused = false
