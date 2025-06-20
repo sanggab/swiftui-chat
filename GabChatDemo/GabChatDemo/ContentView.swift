@@ -16,7 +16,7 @@ struct ContentView: View {
     @Perception.Bindable var store: StoreOf<GabChatDemoReducer>
     
     @State private var inputHeight: CGFloat = 0
-    
+    @State private var isThreshold: Bool = false
     @FocusState private var isFocused
     
     init(store: StoreOf<GabChatDemoReducer>) {
@@ -112,11 +112,12 @@ struct ContentView: View {
             .detechRefresh {
                 
             }
-//            .backgroundColor(color: .white)
+            .onScrollBeyondThreshold { isThreshold in
+                self.isThreshold = isThreshold
+            }
+            .onScrollBeyondThreshold($isThreshold)
+            .setThreshold(100)
             .background(.mint)
-//            .onTapGesture {
-//                isFocused = false
-//            }
         }
 
     }

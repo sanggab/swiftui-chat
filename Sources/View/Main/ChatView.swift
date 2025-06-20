@@ -100,11 +100,13 @@ public struct ChatView<ContentView: View, InputView: View, ChatModel: Hashable &
         view._isThreshold = threshold
         return view
     }
-    /// Floating 메시지를 뜨게 하는 한계점을 세팅합니다.
+    /// 스크롤이 하단으로부터 얼만큼 이동했는 지를 판단하는 한계점을 설정합니다.
     ///
     /// 일반적으로, 채팅에서 Floating 메시지를 띄워야 할 경우
     /// 채팅 아래서 부터 y 좌표가 얼마나 떨어져 있냐에 따라 노출 조건이 다르게 때문에
     /// threshold을 설정해서 컨트롤 합니다.
+    ///
+    /// > Note: 기본적으로 설정을 안 할 경우에, threshold의 기본 값은 100입니다.
     public func setThreshold(_ threshold: CGFloat) -> ChatView {
         var view: ChatView = self
         view.threshold = threshold
