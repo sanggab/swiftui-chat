@@ -73,7 +73,7 @@ ChatView에서 사용자가 정의한 채팅의 Entity, VO, Model을 받는 이�
 
 어떻게 내부적으로 그것을 관리하는 지 자세하게 설명해드리겠습니다.
 
-먼저 ChatList는 Hashable, Identifiable을 채택해야 합니다. DIffableDataSource는 ItemIdentifier가 Hashable을 준수하기 떄문에 ChatModel이 Hashable을 채택을 합니다.
+먼저 ChatList는 Hashable, Identifiable, Sendable을 채택해야 합니다. DIffableDataSource는 ItemIdentifier가 Hashable을 준수하기 떄문에 ChatModel이 Hashable을 채택을 합니다.
 그 다음에 snapShot에 reload를 하거나 reconfigure, append, delete시에 중복되는 값을 제외하는 필요성이 있기 때문에 Identifiable를 채택해야 합니다.  
 
 이 ChatList가 Binding인 이유는 만약 Socket이나 Restful API를 이용해서 채팅이 추가 되거나, 삭제 시에 UpdateUIView에 문제점이 있어서 일단은 내부적으로 ChatList을 변경하지 않지만 Binding 타입으로 받습니다.
