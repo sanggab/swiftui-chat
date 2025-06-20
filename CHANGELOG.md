@@ -1,5 +1,30 @@
 #  CHANGELOG
 
+---
+
+## [1.3 - ADD & Fix](https://github.com/sanggab/swiftui-chat/releases/tag/1.3) (2025-06-20)
+### ADD
+
+* 채팅에서 빠질 수 없는 기능들을 Modifier로 만나보실 수 있습니다.  
+
+  #### Background
+  * 채팅의 backgroundColor를 변경할 수 있는 modifier를 추가했습니다.  
+ 
+  #### DetetchRefresh
+  * 채팅에서 상단 부분을 Pull해서 새로고침을 해서 채팅 데이터를 더 불러오는 로직을 위해
+  * Pull하고 새로고침 Indiciator가 나오면서 사라지는 것을 감지할 수 있는 modifier를 추가했습니다.
+  
+  #### SetThreshold
+  * 채팅의 하단에서부터 스크롤이 얼마만큼 이동했는 지의 값을 설정할 수 있는 modifier를 추가했습니다.
+  * 해당 기능은 OnScrollBeyondThreshold와 연관됩니다.
+
+  #### OnScrollBeyondThreshold와
+  * 채팅의 스크롤이 threshold의 한계점을 넘었는 지 알 수 있는 modifier를 추가했습니다.
+  * 해당 기능은 floatingmessage와 연결해서 사용하면 최상의 효율을 발휘합니다.
+  
+### Fix
+* Generic Type인 ChatModel의 형식을 Hashable & Identifiable & Sendable에서 Hashable & Identifiable로 변경하였습니다.
+* DiffableUpdateState의 동작 방식들을 대거 수정했습니다.
 
 ---
 
