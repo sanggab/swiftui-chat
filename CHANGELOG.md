@@ -2,6 +2,12 @@
 
 ---
 
+## [1.4 - Fix ChatModel](https://github.com/sanggab/swiftui-chat/releases/tag/1.4) (2025-06-20)
+### Fix
+* Generic Type인 ChatModel의 형식을 Hashable & Identifiable에서 Hashable & Identifiable & Sendable로 롤백했습니다.
+
+---
+
 ## [1.3 - ADD & Fix](https://github.com/sanggab/swiftui-chat/releases/tag/1.3) (2025-06-20)
 ### ADD
 
