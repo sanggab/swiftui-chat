@@ -31,7 +31,7 @@ public enum UpdateType: CaseIterable, Equatable {
     case isFoucsed
 }
 
-public struct ChatModel: Hashable, Identifiable {
+public struct ChatModel: Hashable, Identifiable, Sendable {
     public static func == (lhs: ChatModel, rhs: ChatModel) -> Bool {
         lhs.id == rhs.id &&
         lhs.memNo == rhs.memNo &&

@@ -10,7 +10,7 @@ import SwiftUI
 /// ChatCoordinator
 ///
 /// UICollectionView와 관련된 요소(ex: delegate)를 처리하는 class
-public final class ChatCoordinator<ContentView: View, ChatModel: Hashable & Identifiable>: NSObject, UICollectionViewDelegate {
+public final class ChatCoordinator<ContentView: View, ChatModel: Hashable & Identifiable & Sendable>: NSObject, UICollectionViewDelegate {
     
     public typealias ItemBuilderClosure = (before: ChatModel?, current: ChatModel, after: ChatModel?)
     
