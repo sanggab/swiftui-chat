@@ -53,13 +53,13 @@ ChatView는 UICollectionView와 UICollectionViewDiffableDataSource를 활용해�
 ```swift
 import GabChat
 
-@State private var chatList: [Hashable & Identifiable] = []
+@State private var chatList: [Hashable & Identifiable & Sendable] = []
 @State private var diffableUpdateState: DiffableUpdateState = .waiting
     
     var body: some View {
-        ChatView(chatList: <#T##[Hashable & Identifiable]#>,
-                 diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
-                 itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
+        ChatView(chatList: <#T##[Hashable & Identifiable & Sendable]#>,
+                 diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable & Sendable>>#>,
+                 itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable & Sendable>.ItemBuilderClosure) -> View#>,
                  inputBuilderClosure: <#T##() -> View#>)
     }
 ```
@@ -245,11 +245,11 @@ snapShot의 item을 다 삭제하고 현재 item들로 세팅한다음 reload를
 
    ##### Usage examples:
    ```swift
-   ChatView(chatList: <#T##[Hashable & Identifiable]#>,
-                    diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
-                    itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
-                    inputBuilderClosure: <#T##() -> View#>)
-           .backgroundColor(color: <#T##Color#>)
+   ChatView(chatList: <#T##[Hashable & Identifiable & Sendable]#>,
+            diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable & Sendable>>#>,
+            itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable & Sendable>.ItemBuilderClosure) -> View#>,
+            inputBuilderClosure: <#T##() -> View#>)
+   .backgroundColor(color: <#T##Color#>)
    ```
 
 <br>
@@ -263,13 +263,13 @@ snapShot의 item을 다 삭제하고 현재 item들로 세팅한다음 reload를
 
    ##### Usage examples:
    ```swift
-   ChatView(chatList: <#T##[Hashable & Identifiable]#>,
-                    diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
-                    itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
-                    inputBuilderClosure: <#T##() -> View#>)
-            .detechRefresh {
-                  /// 새로고침 수행
-             }
+   ChatView(chatList: <#T##[Hashable & Identifiable & Sendable]#>,
+            diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable & Sendable>>#>,
+            itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable & Sendable>.ItemBuilderClosure) -> View#>,
+            inputBuilderClosure: <#T##() -> View#>)
+   .detechRefresh {
+          /// 새로고침 수행
+   }
    ```
 
 
@@ -289,11 +289,11 @@ snapShot의 item을 다 삭제하고 현재 item들로 세팅한다음 reload를
 
    ##### Usage examples:
    ```swift
-   ChatView(chatList: <#T##[Hashable & Identifiable>,
-                    diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
-                    itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
-                    inputBuilderClosure: <#T##() -> View#>)
-           .setThreshold(120)
+   ChatView(chatList: <#T##[Hashable & Identifiable & Sendable]#>,
+            diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable & Sendable>>#>,
+            itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable & Sendable>.ItemBuilderClosure) -> View#>,
+            inputBuilderClosure: <#T##() -> View#>)
+   .setThreshold(120)
    ```
 
 > [!Note]
@@ -315,13 +315,13 @@ snapShot의 item을 다 삭제하고 현재 item들로 세팅한다음 reload를
    
    @State private var isThreshold: Bool = false
    
-   ChatView(chatList: <#T##[Hashable & Identifiable>,
-                    diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
-                    itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
-                    inputBuilderClosure: <#T##() -> View#>)
-           .onScrollBeyondThreshold { isThreshold in
-                   self.isThreshold = isThreshold
-           }
+   ChatView(chatList: <#T##[Hashable & Identifiable & Sendable]#>,
+            diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable & Sendable>>#>,
+            itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable & Sendable>.ItemBuilderClosure) -> View#>,
+            inputBuilderClosure: <#T##() -> View#>)
+   .onScrollBeyondThreshold { isThreshold in
+        self.isThreshold = isThreshold
+    }
    ```
 
 <br>
@@ -333,11 +333,11 @@ snapShot의 item을 다 삭제하고 현재 item들로 세팅한다음 reload를
    
    @State private var isThreshold: Bool = false
    
-   ChatView(chatList: <#T##[Hashable & Identifiable>,
-                    diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
-                    itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
-                    inputBuilderClosure: <#T##() -> View#>)
-           .onScrollBeyondThreshold($isThreshold)
+   ChatView(chatList: <#T##[Hashable & Identifiable & Sendable]#>,
+            diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable & Sendable>>#>,
+            itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable & Sendable>.ItemBuilderClosure) -> View#>,
+            inputBuilderClosure: <#T##() -> View#>)
+   .onScrollBeyondThreshold($isThreshold)
    ```
 
 
