@@ -22,6 +22,10 @@
     * [reconfigureAnimate(isScroll: Bool)](#reconfigureAnimate)
   * [ItemBuilderClosure](#itemBuilderClosure)
   * [InputBuilderClosure](#inputBuilderClosure)
+  * [BackgroundColor](#backgroundcolor)
+  * [DetechRefresh](#detechrefresh)
+  * [SetThreshold](#setthreshold)
+  * [OnScrollBeyondThreshold](#onscrollbeyondthreshold)
 
 
 <a name="documentation"></a>
@@ -38,9 +42,9 @@ swiftui-chat은 SwiftUI에서 제가 이런 방식으로 채팅을 구현했구�
 ChatView는 UICollectionView와 UICollectionViewDiffableDataSource를 활용해서 만들었습니다.  
 기본적인 설명 방법은 간단합니다.
 
-- ItemProtocol을 채택한 모델을 넣어준다.
+- Hashable, Identifiable 채택한 모델을 넣어준다.
 - 채팅을 업데이트 하고 싶을 때 DiffableUpdateState를 내가 원하는 업데이트 방법으로 설정해준다.
-- itemBuilderClosure에서 들어오는 ItemProtocol로 Cell을 설정헌다.
+- itemBuilderClosure에서 들어오는 모델로 Cell을 설정한다.
 - inputBuilderClosure에 인풋창을 구현한다.
 
 이렇게만 놓고 보면 이해하기 힘들거라고 샏각듭니다. 그래서 하나씩 자세하게 파고 들어가겠습니다.
@@ -49,13 +53,13 @@ ChatView는 UICollectionView와 UICollectionViewDiffableDataSource를 활용해�
 ```swift
 import GabChat
 
-@State private var chatList: [Hashable & Identifiable & Sendable] = []
-@State private var diffableUpdateState: DiffableUpdateState<Hashable & Identifiable & Sendable> = .waiting
+@State private var chatList: [Hashable & Identifiable] = []
+@State private var diffableUpdateState: DiffableUpdateState = .waiting
     
     var body: some View {
-        ChatView(chatList: <#T##[Hashable & Identifiable & Sendable]#>,
-                 diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable & Sendable>>#>,
-                 itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable & Sendable>.ItemBuilderClosure) -> View#>,
+        ChatView(chatList: <#T##[Hashable & Identifiable]#>,
+                 diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
+                 itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
                  inputBuilderClosure: <#T##() -> View#>)
     }
 ```
@@ -69,11 +73,10 @@ ChatView에서 사용자가 정의한 채팅의 Entity, VO, Model을 받는 이�
 
 어떻게 내부적으로 그것을 관리하는 지 자세하게 설명해드리겠습니다.
 
-먼저 ChatList는 ItemProtocol을 채택해야 합니다. DIffableDataSource는 ItemIdentifier가 Hashable을 준수하기 떄문에 ChatModel이 Hashable을 채택을 합니다.
+먼저 ChatList는 Hashable, Identifiable을 채택해야 합니다. DIffableDataSource는 ItemIdentifier가 Hashable을 준수하기 떄문에 ChatModel이 Hashable을 채택을 합니다.
 그 다음에 snapShot에 reload를 하거나 reconfigure, append, delete시에 중복되는 값을 제외하는 필요성이 있기 때문에 Identifiable를 채택해야 합니다.  
-마지막으로 Thread의 안정성 이유로 Sendable을 채택해야 합니다. 그래서 ItemProtocol을 채택해야 합니다.
 
-이 ChatList가 Binding이 아닌 이유는 만약 Socket이나 Restful API를 이용해서 채팅이 추가 되거나, 삭제 시에 View는 어차피 redraw 되기 때문에 필요가 없습니다.
+이 ChatList가 Binding인 이유는 만약 Socket이나 Restful API를 이용해서 채팅이 추가 되거나, 삭제 시에 UpdateUIView에 문제점이 있어서 일단은 내부적으로 ChatList을 변경하지 않지만 Binding 타입으로 받습니다.
 
 <a name="diffableUpdateState"></a>
 ## DiffableUpdateState
@@ -232,3 +235,114 @@ snapShot의 item을 다 삭제하고 현재 item들로 세팅한다음 reload를
 
 
 <br>
+
+
+<a name="backgroundcolor"></a>
+## BackgroundColor
+
+* `func backgroundColor(color: Color) -> ChatView`  
+   UICollectionView의 backgroundColor를 바꿉니다.
+
+   ##### Usage examples:
+   ```swift
+   ChatView(chatList: <#T##[Hashable & Identifiable]#>,
+                    diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
+                    itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
+                    inputBuilderClosure: <#T##() -> View#>)
+           .backgroundColor(color: <#T##Color#>)
+   ```
+
+<br>
+
+
+<a name="detechrefresh"></a>
+## DetechRefresh
+
+* `func detechRefresh(isRefresh: @escaping (() -> Void)) -> ChatView`  
+   새로고침 Indicaator가 끝났을 때, refresh를 하라고 알려주는 기능
+
+   ##### Usage examples:
+   ```swift
+   ChatView(chatList: <#T##[Hashable & Identifiable]#>,
+                    diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
+                    itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
+                    inputBuilderClosure: <#T##() -> View#>)
+            .detechRefresh {
+                  /// 새로고침 수행
+             }
+   ```
+
+
+<br>
+
+
+
+<a name="setthreshold"></a>
+## SetThreshold
+
+* `func setThreshold(_ threshold: CGFloat) -> ChatView`  
+   스크롤이 하단으로부터 얼만큼 이동했는 지를 판단하는 한계점을 설정합니다.  
+
+   일반적으로, 채팅에서 Floating 메시지를 띄워야 할 경우  
+   채팅 아래서 부터 y 좌표가 얼마나 떨어져 있냐에 따라 노출 조건이 다르게 때문에  
+   threshold을 설정해서 컨트롤 합니다.  
+
+   ##### Usage examples:
+   ```swift
+   ChatView(chatList: <#T##[Hashable & Identifiable>,
+                    diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
+                    itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
+                    inputBuilderClosure: <#T##() -> View#>)
+           .setThreshold(120)
+   ```
+
+> [!Note]
+> 기본적으로 setThreshold을 설정을 안 할 경우에, threshold의 기본 값은 100입니다.
+
+<br>
+
+
+
+<a name="onscrollbeyondthreshold"></a>
+## OnScrollBeyondThreshold
+채팅의 스크롤이 ``setThreshold(_:)``로 설정한 한계점에 걸렸는 지 알려주는 기능   
+
+
+* `func onScrollBeyondThreshold(_ threshold: @escaping ((Bool) -> Void)) -> ChatVie`
+
+   ##### Usage examples:
+   ```swift
+   
+   @State private var isThreshold: Bool = false
+   
+   ChatView(chatList: <#T##[Hashable & Identifiable>,
+                    diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
+                    itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
+                    inputBuilderClosure: <#T##() -> View#>)
+           .onScrollBeyondThreshold { isThreshold in
+                   self.isThreshold = isThreshold
+           }
+   ```
+
+<br>
+
+* `func onScrollBeyondThreshold(_ threshold: Binding<Bool>) -> ChatVie`
+
+   ##### Usage examples:
+   ```swift
+   
+   @State private var isThreshold: Bool = false
+   
+   ChatView(chatList: <#T##[Hashable & Identifiable>,
+                    diffableUpdateState: <#T##Binding<DiffableUpdateState<Hashable & Identifiable>>#>,
+                    itemBuilderClosure: <#T##(ChatCoordinator<View, Hashable & Identifiable>.ItemBuilderClosure) -> View#>,
+                    inputBuilderClosure: <#T##() -> View#>)
+           .onScrollBeyondThreshold($isThreshold)
+   ```
+
+
+<br>
+
+
+
+
