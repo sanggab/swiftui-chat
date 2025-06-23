@@ -89,16 +89,16 @@ diffableDataSource에 어떤 방식으로 업데이트를 시킬 지 결정하�
 차근 차근 하나씩 살펴 보도록 하겠습니다.
 
 `DiffableUpdateState`의 파라미터들을 살펴봅시다!
-기본적으로 ``isScroll`` 옵션은 채팅의 맨 하단으로 scroll을 할 지 말지 여부를 결정하는 옵션입니다.
-- ``onAppear(isScroll: Bool)`` : 최초 채팅을 세팅할 때, diffableDataSource에 snapShot을 찍기 위해서 필요한 옵션입니다.
-- ``waiting`` : 정지상태입니다. 아무것도 작동을 하지 않습니다.
-- ``appendItem(isScroll: Bool)`` : ChatList가 추가될 때 설정하는 옵션입니다.
-- ``reload(isScroll: Bool)`` : ChatList을 전체적으로 다시 reload을 하는 옵션입니다.
-- ``reloadAnimate(isScroll: Bool)`` : ChatList을 전체적으로 애니메이션과 함께 reload하는 옵션입니다.
-- ``reloadItem(isScroll: Bool)`` : ChatList에서 중복인 item을 제외한 나머지 item들만 reload을 하는 옵션입니다.
-- ``reloadItemAnimate(isScroll: Bool)`` : ChatList에서 중복이 아닌 item들만 애니메이션과 함께 reload을 하는 옵션입니다.
-- ``reconfigure(isScroll: Bool)`` : ChatList에서 중복이 아닌 item들만 reconfigure를 하는 옵션입니다.
-- ``reconfigureAnimate(isScroll: Bool)`` : ChatList에서 중복이 아닌 item들만 애니메이션과 함께 reconfigure를 하는 옵션입니다.
+기본적으로 `isScroll` 옵션은 채팅의 맨 하단으로 scroll을 할 지 말지 여부를 결정하는 옵션입니다.
+- `onAppear(isScroll: Bool)` : 최초 채팅을 세팅할 때, diffableDataSource에 snapShot을 찍기 위해서 필요한 옵션입니다.
+- `waiting` : diffableDataSourceSnapShot의 itemIdentifiers의 개수와 ChatModel의 개수와 비교해서 다를 경우에 snapShot을 `reconfigure(isScroll: true)`을 수행합니다.
+- `appendItem(isScroll: Bool)` : ChatList가 추가될 때 설정하는 옵션입니다.
+- `reload(isScroll: Bool)` : ChatList을 전체적으로 다시 reload을 하는 옵션입니다.
+- `reloadAnimate(isScroll: Bool)` : ChatList을 전체적으로 애니메이션과 함께 reload하는 옵션입니다.
+- `reloadItem(isScroll: Bool)` : ChatList에서 중복인 item을 제외한 나머지 item들만 reload을 하는 옵션입니다.
+- `reloadItemAnimate(isScroll: Bool)` : ChatList에서 중복이 아닌 item들만 애니메이션과 함께 reload을 하는 옵션입니다.
+- `reconfigure(isScroll: Bool)` : ChatList에서 중복이 아닌 item들만 reconfigure를 하는 옵션입니다.
+- `reconfigureAnimate(isScroll: Bool)` : ChatList에서 중복이 아닌 item들만 애니메이션과 함께 reconfigure를 하는 옵션입니다.
 
 자 이렇게 간단하게 설명했는 데 이것만 보고 파악하긴 어려우니 하나씩 자세하게 설명드리겠습니다.
 
