@@ -2,6 +2,17 @@
 
 ---
 
+## [1.5 - Feat Waiting Action](https://github.com/sanggab/swiftui-chat/releases/tag/1.5) (2025-06-23)
+### ADD
+* InputUpdateState와 DiffableUpdateState 일 때 처리하는 기능을 추가했습니다.
+  * InputUpdateState 일 때 이전의 인풋창 높이와 비교해서 채팅의 스크롤을 이동시키는 기능을 추가했습니다.
+  * DiffableUpdateState 일 때 diffableDataSourceSnapShot의 itemIdentifiers의 개수와 ChatModel의 개수와 비교해서 다를 경우에 snapShot을 새로 찍는 기능을 추가했습니다.
+
+### Fix
+* 인풋창 높이가 달라졌을 때 스크롤을 이동하는 기능을 처리하는 `isConditionWithDifferenceInputHeight(_ uiView:)`의 로직을 변경했습니다.
+
+---
+
 ## [1.4 - Fix ChatModel](https://github.com/sanggab/swiftui-chat/releases/tag/1.4) (2025-06-20)
 ### Fix
 * Generic Type인 ChatModel의 형식을 Hashable & Identifiable에서 Hashable & Identifiable & Sendable로 롤백했습니다.
