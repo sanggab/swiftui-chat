@@ -2,7 +2,7 @@
 
 ---
 
-## [1.5 - Fix ReadMe](https://github.com/sanggab/swiftui-chat/releases/tag/1.6) (2025-06-23)
+## [1.6 - Fix ReadMe](https://github.com/sanggab/swiftui-chat/releases/tag/1.6) (2025-06-23)
 ### Fix
 * ReadMe의 잘못된 부분을 수정했습니다.
 
