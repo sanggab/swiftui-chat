@@ -14,7 +14,7 @@ extension ChatCollectionView {
     func onAppearAction(_ uiView: UICollectionView, context: Context) {
 //        let size: CGSize = uiView.frame.size
 //        let contentSize: CGSize = uiView.contentSize
-//        
+//
 //        if size.height != .zero && contentSize.height != .zero && self.inputUpdateState == .onAppear {
 //            DispatchQueue.main.async {
 //                self.inputUpdateState = .waiting
@@ -25,12 +25,20 @@ extension ChatCollectionView {
 // MARK: - waiting
 extension ChatCollectionView {
     /// waiting State일 때 처리하는 기능 모음
-    func waitingAction() {
-//        if self.keyboardOption.state != .none {
-//            DispatchQueue.main.async {
-//                self.inputUpdateState = .keyboard
-//            }
-//        }
+    func inputWaitingAction(_ uiView: UICollectionView) {
+        let inputHeightCondition: Bool = self.isDifferenceInputHeight()
+        if inputHeightCondition {
+            self.isConditionWithDifferenceInputHeight(uiView)
+        }
+        
+        self.previousKeyboardHeight = self.keyboardOption.size.height
+        self.previousInputHeight = self.inputHeight
+    }
+    
+    func diffableWaitingAction(_ uiView: UICollectionView, context: Context) {
+        if context.coordinator.getSnapShotItemCount() != self.chatList.count {
+            self.reconfigureAction(uiView, context: context, isScroll: true)
+        }
     }
 }
 // MARK: - textInput
@@ -40,9 +48,6 @@ extension ChatCollectionView {
     func textInputAction(_ uiView: UICollectionView) {
         if self.keyboardOption.state == .willHide || self.keyboardOption.state == .didHide {
             self.inputUpdateState = .keyboard
-//            DispatchQueue.main.async {
-//                self.inputUpdateState = .keyboard
-//            }
         }
         
         let keyboardCondition: Bool = self.isDifferenceKeyboardHeight()
@@ -54,17 +59,14 @@ extension ChatCollectionView {
         case (false, true):
             self.isConditionWithDifferenceInputHeight(uiView)
         case (true, true):
-            fatalError("keyboardCondition and inputHeightCondition is true at the same time.")
+            break
         case (false, false):
-            fatalError("keyboardCondition and inputHeightCondition is false at the same time.")
+            break
         }
         
         self.previousKeyboardHeight = self.keyboardOption.size.height
         self.previousInputHeight = self.inputHeight
-//        DispatchQueue.main.async {
-//            self.previousKeyboardHeight = self.keyboardOption.size.height
-//            self.previousInputHeight = self.inputHeight
-//        }
+        self.previousInputUpdateState = self.inputUpdateState
     }
     /// 키보드 높이가 달라졌을 때 처리하는 기능
     @MainActor
@@ -86,12 +88,38 @@ extension ChatCollectionView {
     /// 인풋창 높이가 달라졌을 때 처리하는 기능
     @MainActor
     func isConditionWithDifferenceInputHeight(_ uiView: UICollectionView) {
-        let currentOffsetY: CGFloat = uiView.contentOffset.y
-        let differenceHeight: CGFloat = self.inputHeight - self.previousInputHeight
+        guard isContentBiggerThanFrame(uiView) else { return }
+
+        let viewHeight = uiView.frame.height
+        let contentHeight = uiView.contentSize.height
+        let currentOffsetY = uiView.contentOffset.y
+        let differenceHeight = self.inputHeight - self.previousInputHeight
         
-        if currentOffsetY + differenceHeight >= 0 {
-            self.executeAnimator(uiView, offsetY: uiView.contentOffset.y + differenceHeight)
+        // MARK: 최상단일 경우
+        if currentOffsetY <= 0 {
+            // 최상단이므로 위로 올릴 필요 없음
+            return
         }
+
+        // MARK: 최하단일 경우
+        let isAtBottom = currentOffsetY + viewHeight >= contentHeight - 1.0
+        if isAtBottom {
+            // 키보드가 올라가면 자동으로 따라가게끔 유지
+            scrollToBottom(uiView)
+            return
+        }
+
+        // MARK: 중간일 경우 → 자연스럽게 offset 조정
+        let newOffsetY = currentOffsetY + differenceHeight
+        let clampedOffsetY = max(0, min(newOffsetY, contentHeight - viewHeight))
+        self.executeAnimator(uiView, offsetY: clampedOffsetY)
+    }
+    
+    func scrollToBottom(_ uiView: UICollectionView, animated: Bool = true) {
+        let contentHeight = uiView.contentSize.height
+        let viewHeight = uiView.bounds.size.height
+        let bottomOffset = CGPoint(x: 0, y: max(0, contentHeight - viewHeight))
+        uiView.setContentOffset(bottomOffset, animated: animated)
     }
 }
 // MARK: - keyboard
@@ -100,11 +128,16 @@ extension ChatCollectionView {
     @MainActor
     func controlOffsetWithKeyboard(_ uiView: UICollectionView) {
         switch self.keyboardOption.state {
-        case .willShow: self.isConditionWithKeyboardShow(uiView)
-        case .willHide: self.isConditionWithKeyboardHide(uiView)
-        case .didShow: fallthrough
-        case .didHide: fallthrough
-        case .none: break
+        case .willShow:
+            self.isConditionWithKeyboardShow(uiView)
+        case .willHide:
+            self.isConditionWithKeyboardHide(uiView)
+        case .didShow:
+            break
+        case .didHide:
+            break
+        case .none:
+            break
         }
     }
     /// Keyboard가 올라올 때 처리를 하는 method
@@ -120,6 +153,7 @@ extension ChatCollectionView {
         self.isNearBottom(uiView) ? self.executeSetContentOffset(uiView, offset: moveOffsetY) : self.executeAnimator(uiView, offsetY: moveOffsetY)
         
         self.inputUpdateState = .textInput
+        self.previousInputUpdateState = self.inputUpdateState
         self.keyboardOption.state = .none
     }
     
@@ -133,6 +167,7 @@ extension ChatCollectionView {
         self.keyboardHideAnimator(uiView, offsetY: moveOffsetY)
         
         self.inputUpdateState = .waiting
+        self.previousInputUpdateState = self.inputUpdateState
         self.keyboardOption.state = .none
     }
 }

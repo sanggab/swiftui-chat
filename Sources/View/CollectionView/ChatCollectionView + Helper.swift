@@ -47,12 +47,12 @@ extension ChatCollectionView {
 extension ChatCollectionView {
     /// 현재 위치가 바닥인지 확인하는 기능
     func isBottom(_ uiView: UICollectionView) -> Bool {
-        let viewHeight: CGFloat = uiView.frame.height
-        let contentHeight: CGFloat = uiView.contentSize.height
-        let offsetY: CGFloat = uiView.contentOffset.y
-        
+        let viewHeight: Int = Int(uiView.frame.height)
+        let contentHeight: Int = Int(uiView.contentSize.height)
+        let offsetY: Int = Int(uiView.contentOffset.y)
         return offsetY == (contentHeight - viewHeight)
     }
+    
     func isBottomToOffset(_ uiView: UICollectionView, offset: CGFloat) -> Bool {
         
         return false

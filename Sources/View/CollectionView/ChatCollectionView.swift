@@ -19,6 +19,7 @@ public struct ChatCollectionView<ContentView: View, ChatModel: Hashable & Identi
     
     @Binding var inputUpdateState: InputUpdateState
     @State var previousInputHeight: CGFloat = 0
+    @State var previousInputUpdateState: InputUpdateState = .waiting
     @State var previousKeyboardHeight: CGFloat = 0
     
     private var isRefresh: (() -> Void)?
@@ -104,7 +105,7 @@ extension ChatCollectionView {
         if diffableUpdateState == .waiting {
             switch self.inputUpdateState {
             case .waiting:
-                self.waitingAction()
+                self.inputWaitingAction(uiView)
             case .textInput:
                 self.textInputAction(uiView)
             case .keyboard:
@@ -122,7 +123,7 @@ extension ChatCollectionView {
             case .onAppear(let isScroll):
                 self.diffableOnAppearAction(uiView, context: context, isScroll: isScroll)
             case .waiting:
-                self.waitingAction()
+                self.diffableWaitingAction(uiView, context: context)
             case .appendItem(let isScroll):
                 self.appendItem(uiView, context: context, isScroll: isScroll)
             case .reload(let isScroll):
