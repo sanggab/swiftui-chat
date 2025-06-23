@@ -2,6 +2,12 @@
 
 ---
 
+## [1.5 - Fix ReadMe](https://github.com/sanggab/swiftui-chat/releases/tag/1.6) (2025-06-23)
+### Fix
+* ReadMe의 잘못된 부분을 수정했습니다.
+
+---
+
 ## [1.5 - Feat Waiting Action](https://github.com/sanggab/swiftui-chat/releases/tag/1.5) (2025-06-23)
 ### ADD
 * InputUpdateState와 DiffableUpdateState 일 때 처리하는 기능을 추가했습니다.
